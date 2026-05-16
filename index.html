@@ -1,0 +1,2359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benyas Industries Study Hub | UK Curriculum Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #34d399;
+            --bg-dark: #1a1a1a;
+            --bg-darker: #0f0f0f;
+            --card-bg: rgba(0, 0, 0, 0.7);
+            --gold: #ffd700;
+            --gold-light: #ffed4e;
+            --text-primary: #ffffff;
+            --text-secondary: #d1d5db;
+            --green-accent: #ecfdf5;
+            --green-border: rgba(16, 185, 129, 0.4);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(to bottom right, #000000, #064e3b, #065f46);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Auth Modal */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .auth-container {
+            background: var(--card-bg);
+            border: 1px solid var(--green-border);
+            border-radius: 2rem;
+            padding: 3rem;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 1rem;
+            padding: 0.5rem;
+        }
+
+        .auth-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab:hover {
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        .auth-tab.active {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .auth-form h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .auth-input {
+            width: 100%;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--green-border);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .auth-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .auth-input:focus {
+            outline: none;
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .auth-error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* User Header */
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--green-border);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #000;
+        }
+
+        .user-details h3 {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-details p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .leaderboard-header {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--green-border);
+            border-radius: 1rem 1rem 0 0;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 60px 1fr 150px;
+            gap: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .leaderboard-row {
+            border: 1px solid var(--green-border);
+            border-top: none;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 60px 1fr 150px;
+            gap: 1rem;
+            align-items: center;
+            background: rgba(16, 185, 129, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-row:hover {
+            background: rgba(16, 185, 129, 0.15);
+        }
+
+        .leaderboard-row:last-child {
+            border-radius: 0 0 1rem 1rem;
+        }
+
+        .leaderboard-rank {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .leaderboard-rank.gold {
+            color: var(--gold);
+        }
+
+        .leaderboard-name {
+            font-weight: 600;
+        }
+
+        .leaderboard-points {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid var(--green-border);
+            border-radius: 1rem;
+            padding: 0.5rem 1rem;
+            text-align: center;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Header Section */
+        .header {
+            background: var(--bg-darker);
+            border: 1px solid var(--green-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .header-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .header-card {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--green-border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .header-card-icon {
+            font-size: 2rem;
+        }
+
+        .header-card h3 {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-card p {
+            font-size: 0.9rem;
+            color: #9ca3af;
+            margin: 0;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Year Groups Sidebar */
+        .sidebar-card {
+            background: var(--card-bg);
+            border: 1px solid var(--green-border);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            height: fit-content;
+        }
+
+        .sidebar-card h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .stage-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .stage-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .year-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .year-btn {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--green-border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .year-btn:hover {
+            background: rgba(16, 185, 129, 0.25);
+            border-color: var(--primary);
+        }
+
+        .year-btn.active {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+        }
+
+        /* Subject Tabs */
+        .tabs-container {
+            background: var(--card-bg);
+            border: 1px solid var(--green-border);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: #fff9e6;
+            border-radius: 1rem;
+            padding: 0.5rem;
+        }
+
+        .tab-trigger {
+            background: transparent;
+            border: none;
+            color: #1a1a1a;
+            padding: 1rem;
+            border-radius: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .tab-trigger:hover {
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        .tab-trigger.active {
+            background: var(--primary);
+            color: #000;
+        }
+
+        /* Topics Grid */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .topic-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #fbbf24;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .topic-card:hover {
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .topic-card.active {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.3);
+        }
+
+        .topic-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .topic-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: #000;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .topic-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Flashcards Section */
+        .flashcards-section {
+            background: var(--card-bg);
+            border: 1px solid var(--green-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            background: var(--primary);
+            color: #000;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .flashcard-display {
+            background: linear-gradient(to bottom right, #065f46, #0f0f0f);
+            border: 1px solid var(--green-border);
+            border-radius: 2rem;
+            padding: 2rem;
+            min-height: 260px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .flashcard-display:hover {
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.2);
+        }
+
+        .flashcard-question {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .flashcard-answer {
+            margin-top: 1.5rem;
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .flashcard-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Grade Boundaries */
+        .grades-section {
+            background: var(--card-bg);
+            border: 1px solid var(--green-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .grade-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .grade-label {
+            font-weight: 600;
+            font-size: 1rem;
+            min-width: 80px;
+        }
+
+        .grade-label-pct {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            overflow: hidden;
+            margin: 0 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 50px;
+            transition: width 0.3s ease;
+        }
+
+        /* Practice Papers */
+        .papers-grid {
+            display: grid;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .paper-card {
+            background: var(--card-bg);
+            border: 1px solid var(--green-border);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .paper-header {
+            background: linear-gradient(to right, var(--primary), #10b981);
+            color: #000;
+            padding: 1.5rem;
+        }
+
+        .paper-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .paper-meta {
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .paper-content {
+            padding: 2rem;
+        }
+
+        .question-item {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px #fbbf24;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-number {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--green-border);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--primary);
+        }
+
+        .option-btn.selected {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+        }
+
+        .option-btn.correct {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(52, 211, 153, 0.9));
+            border-color: var(--primary);
+            color: #000;
+            font-weight: 700;
+        }
+
+        .option-btn.incorrect {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(248, 113, 113, 0.9));
+            border-color: #ef4444;
+            color: #000;
+            font-weight: 700;
+        }
+
+        .paper-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #fbbf24, var(--gold));
+            color: #000;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--text-primary);
+            border: 1px solid var(--green-border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(16, 185, 129, 0.3);
+        }
+
+        .score-display {
+            background: var(--green-accent);
+            color: #065f46;
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            font-weight: 700;
+        }
+
+        /* Footer Cards */
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-card {
+            background: var(--card-bg);
+            border: 1px solid var(--green-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                grid-template-columns: 1fr;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Modal -->
+    <div id="authModal" class="auth-modal" style="display: flex;">
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login" onclick="switchAuthTab('login')">Login</button>
+                <button class="auth-tab" data-tab="register" onclick="switchAuthTab('register')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form active">
+                <h2>Welcome Back</h2>
+                <input type="text" id="loginUsername" placeholder="Username" class="auth-input">
+                <input type="password" id="loginPassword" placeholder="Password" class="auth-input">
+                <button type="button" class="btn btn-primary" onclick="handleLogin()" style="width: 100%; margin-top: 1rem;">Login</button>
+                <div id="loginError" class="auth-error" style="margin-top: 1rem;"></div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" class="auth-form">
+                <h2>Create Account</h2>
+                <input type="text" id="registerName" placeholder="Username" class="auth-input">
+                <input type="password" id="registerPassword" placeholder="Password (min 6 chars)" class="auth-input">
+                <button type="button" class="btn btn-primary" onclick="handleRegister()" style="width: 100%; margin-top: 1rem;">Create Account</button>
+                <div id="registerError" class="auth-error" style="margin-top: 1rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pastPapersModal" class="auth-modal" style="display: none;">
+        <div class="auth-container">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <h2>Saved Past Papers</h2>
+                <button class="btn" onclick="hidePastPapers()">Close</button>
+            </div>
+            <div id="pastPapersList" style="max-height:60vh; overflow:auto; color:var(--text-secondary);"></div>
+        </div>
+    </div>
+
+    <div class="container" style="display: none;" id="mainContent">
+        <div class="user-header" id="userHeader" style="display: none;">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">B</div>
+                <div class="user-details">
+                    <h3 id="userName">Benyas Learner</h3>
+                    <p>Welcome back to your study session!</p>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div>
+                    <h1>Benyas Industries Study Hub</h1>
+                    <p>Official UK Curriculum Learning Hub covering KS2, KS3, GCSE and A-Level Maths & Science. Includes flashcards, practice papers, progress tracking, grade boundaries, and revision systems.</p>
+                </div>
+                <div class="header-cards">
+                    <div class="header-card">
+                        <div class="header-card-icon">📐</div>
+                        <div>
+                            <h3>Maths</h3>
+                            <p>All Topics Covered</p>
+                        </div>
+                    </div>
+                    <div class="header-card">
+                        <div class="header-card-icon">⚛️</div>
+                        <div>
+                            <h3>Science</h3>
+                            <p>Biology, Chemistry, Physics</p>
+                        </div>
+                    </div>
+                </div>
+                            <div style="margin-top:1rem;">
+                                <button class="btn" style="background:var(--gold); color:#000; padding:0.5rem 0.75rem; border-radius:0.5rem; font-weight:700;" onclick="showPastPapers()">Saved Past Papers</button>
+                            </div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Sidebar -->
+            <div class="sidebar-card">
+                <h2>📚 Year Groups</h2>
+                
+                <div class="stage-group">
+                    <div class="stage-title">KS2</div>
+                    <div class="year-buttons">
+                        <button class="year-btn" onclick="setYear('Year 3')">Year 3</button>
+                        <button class="year-btn" onclick="setYear('Year 4')">Year 4</button>
+                        <button class="year-btn" onclick="setYear('Year 5')">Year 5</button>
+                        <button class="year-btn" onclick="setYear('Year 6')">Year 6</button>
+                    </div>
+                </div>
+
+                <div class="stage-group">
+                    <div class="stage-title">KS3</div>
+                    <div class="year-buttons">
+                        <button class="year-btn" onclick="setYear('Year 7')">Year 7</button>
+                        <button class="year-btn" onclick="setYear('Year 8')">Year 8</button>
+                        <button class="year-btn" onclick="setYear('Year 9')">Year 9</button>
+                    </div>
+                </div>
+
+                <div class="stage-group">
+                    <div class="stage-title">GCSE</div>
+                    <div class="year-buttons">
+                        <button class="year-btn" onclick="setYear('Year 10')">Year 10</button>
+                        <button class="year-btn" onclick="setYear('Year 11')">Year 11</button>
+                    </div>
+                </div>
+
+                <div class="stage-group">
+                    <div class="stage-title">A-Level</div>
+                    <div class="year-buttons">
+                        <button class="year-btn" onclick="setYear('Year 12')">Year 12</button>
+                        <button class="year-btn" onclick="setYear('Year 13')">Year 13</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="tabs-container">
+                <div class="tab-list">
+                    <button class="tab-trigger active" onclick="setSubject('Maths')">📊 Maths</button>
+                    <button class="tab-trigger" onclick="setSubject('Science')">⚛️ Science</button>
+                </div>
+
+                <!-- Topics Grid -->
+                <div id="topicsContainer" class="topics-grid"></div>
+
+                <!-- Two Column Layout for Flashcards and Grades -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <!-- Flashcards -->
+                    <div class="flashcards-section">
+                        <div class="section-header">
+                            <h2>🧠 <span id="flashcardTitle">Smart Flashcards</span></h2>
+                            <div class="badge" id="flashcardBadge">10 Cards</div>
+                        </div>
+                        <div class="flashcard-display" onclick="toggleAnswer()">
+                            <div>
+                                <div class="flashcard-question" id="flashcardQuestion">Loading...</div>
+                                <div class="flashcard-answer" id="flashcardAnswer" style="display: none;"></div>
+                            </div>
+                        </div>
+                        <div class="flashcard-controls">
+                            <button class="btn btn-primary" onclick="toggleAnswer()">
+                                <span id="answerToggle">Reveal Answer</span>
+                            </button>
+                            <button class="btn btn-secondary" onclick="nextFlashcard()">Next Flashcard →</button>
+                        </div>
+                    </div>
+
+                    <!-- Grade Boundaries -->
+                    <div class="grades-section">
+                        <div class="section-header">
+                            <h2>🏆 Grade Boundaries</h2>
+                        </div>
+                        <div id="gradesContainer"></div>
+                    </div>
+                </div>
+
+                <!-- Practice Papers -->
+                <div id="papersContainer" class="papers-grid"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-grid">
+            <div class="footer-card">
+                <h3>Coverage</h3>
+                <p>Covers all major UK curriculum topics from KS2 to A-Level including advanced algebra, mechanics, organic chemistry, electricity, genetics, trigonometry, calculus, and statistics.</p>
+            </div>
+            <div class="footer-card">
+                <h3>Revision Tracking</h3>
+                <p>Track completed papers, view scores instantly, revise weak topics and build long-term learning progress.</p>
+            </div>
+            <div class="footer-card">
+                <h3>Benyas Industries Official</h3>
+                <p>Designed with a premium dark theme, gold accents, smooth animations, and comfortable learning tools.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let currentYear = 'Year 7';
+        let currentSubject = 'Maths';
+        let currentTopic = 'Number';
+        let currentFlashcardIndex = 0;
+        let showingAnswer = false;
+        let scores = {};
+        let answers = {};
+
+        // Flashcard Data - Organized by Topic and Subject
+        const flashcardData = {
+            'Maths': {
+                'Number': [
+                    { question: 'What is 5 + 3?', answer: '8' },
+                    { question: 'What is 10 - 4?', answer: '6' },
+                    { question: 'What is 2 × 3?', answer: '6' },
+                    { question: 'What is 20 ÷ 5?', answer: '4' },
+                    { question: 'Is 7 a prime number?', answer: 'Yes' },
+                    { question: 'What is -5 + 8?', answer: '3' },
+                    { question: 'What is 100 ÷ 10?', answer: '10' },
+                    { question: 'What is 9²?', answer: '81' },
+                    { question: 'What is the cube root of 8?', answer: '2' },
+                    { question: 'What is 2⁵?', answer: '32' }
+                ],
+                'Fractions': [
+                    { question: 'What is 1/2 + 1/4?', answer: '3/4' },
+                    { question: 'What is 3/4 as a decimal?', answer: '0.75' },
+                    { question: 'Simplify: 6/8', answer: '3/4' },
+                    { question: 'What is 1/2 × 1/2?', answer: '1/4' },
+                    { question: 'What is 2/3 + 1/3?', answer: '1' },
+                    { question: 'What is 3/5 × 2?', answer: '6/5' },
+                    { question: 'What is 1/2 ÷ 1/4?', answer: '2' },
+                    { question: 'Is 2/4 equivalent to 1/2?', answer: 'Yes' },
+                    { question: 'What is 5/8 - 1/8?', answer: '1/2' },
+                    { question: 'What is the reciprocal of 3/4?', answer: '4/3' }
+                ],
+                'Decimals': [
+                    { question: 'What is 0.5 + 0.3?', answer: '0.8' },
+                    { question: 'What is 1.5 × 2?', answer: '3' },
+                    { question: 'What is 2.4 ÷ 2?', answer: '1.2' },
+                    { question: 'Round 3.47 to 1 d.p.', answer: '3.5' },
+                    { question: 'What is 0.1 + 0.01?', answer: '0.11' },
+                    { question: 'What is 5.5 - 2.3?', answer: '3.2' },
+                    { question: 'What is 0.25 × 4?', answer: '1' },
+                    { question: 'Order: 0.3, 0.03, 0.33', answer: '0.03, 0.3, 0.33' },
+                    { question: 'What is 10.5 ÷ 5?', answer: '2.1' },
+                    { question: 'Convert 0.5 to a fraction', answer: '1/2' }
+                ],
+                'Percentages': [
+                    { question: 'What is 25% of 100?', answer: '25' },
+                    { question: 'What is 50% of 80?', answer: '40' },
+                    { question: 'Convert 3/4 to a percentage', answer: '75%' },
+                    { question: 'What is 10% of 50?', answer: '5' },
+                    { question: 'Increase 100 by 20%', answer: '120' },
+                    { question: 'Decrease 200 by 25%', answer: '150' },
+                    { question: 'What percentage is 15 of 60?', answer: '25%' },
+                    { question: 'What is 1% of 1000?', answer: '10' },
+                    { question: 'Convert 45% to a decimal', answer: '0.45' },
+                    { question: 'What is 200% of 50?', answer: '100' }
+                ],
+                'Algebra': [
+                    { question: 'Solve: 2x + 3 = 11', answer: 'x = 4' },
+                    { question: 'Simplify: 3a + 2a - a', answer: '4a' },
+                    { question: 'Expand: 2(x + 3)', answer: '2x + 6' },
+                    { question: 'Solve: 5x - 10 = 15', answer: 'x = 5' },
+                    { question: 'What is x if 3x = 21?', answer: 'x = 7' },
+                    { question: 'Expand: (x + 2)(x + 3)', answer: 'x² + 5x + 6' },
+                    { question: 'Factorize: x² + 5x + 6', answer: '(x + 2)(x + 3)' },
+                    { question: 'Solve: x² = 16', answer: 'x = 4 or x = -4' },
+                    { question: 'What is 2x + 3 when x = 5?', answer: '13' },
+                    { question: 'Simplify: 4x - 2x + 6', answer: '2x + 6' }
+                ],
+                'Geometry': [
+                    { question: 'What is the area of a rectangle 5cm × 3cm?', answer: '15cm²' },
+                    { question: 'What is the angle sum in a triangle?', answer: '180°' },
+                    { question: 'How many sides does a hexagon have?', answer: '6' },
+                    { question: 'What is the perimeter of a square with side 4cm?', answer: '16cm' },
+                    { question: 'What is the area of a circle with radius 5cm?', answer: '78.5cm²' },
+                    { question: 'What are the angle sum in a quadrilateral?', answer: '360°' },
+                    { question: 'What is the volume of a cube with side 3cm?', answer: '27cm³' },
+                    { question: 'What are the coordinates of the origin?', answer: '(0, 0)' },
+                    { question: 'What is the hypotenuse of a 3-4-5 triangle?', answer: '5' },
+                    { question: 'What is the circumference of a circle with radius 2cm?', answer: '12.57cm' }
+                ],
+                'Ratio': [
+                    { question: 'Express 4:8 in simplest form', answer: '1:2' },
+                    { question: 'If the ratio is 3:5 and total is 40, find first part', answer: '15' },
+                    { question: 'If the ratio is 2:3 and first part is 10, find second part', answer: '15' },
+                    { question: 'What is 2:5 as a fraction?', answer: '2/5' },
+                    { question: 'Express 6:9:12 in simplest form', answer: '2:3:4' },
+                    { question: 'If the ratio is 1:4 and total is 100, find each part', answer: '20 and 80' },
+                    { question: 'What is the ratio 30:20 in simplest form?', answer: '3:2' },
+                    { question: 'If ratio is 5:3 and first part is 25, find second part', answer: '15' },
+                    { question: 'What is 3:1 as a decimal ratio?', answer: '3:1' },
+                    { question: 'Express 8:12:4 in simplest form', answer: '2:3:1' }
+                ],
+                'Probability': [
+                    { question: 'What is the probability of rolling a 6 on a die?', answer: '1/6' },
+                    { question: 'What is the probability of picking a red card from a deck?', answer: '1/2' },
+                    { question: 'If a coin is tossed, what is P(heads)?', answer: '1/2' },
+                    { question: 'What is P(rolling odd) on a die?', answer: '1/2' },
+                    { question: 'Express 0.25 as a probability', answer: '1/4' },
+                    { question: 'If P(rain) = 0.3, what is P(no rain)?', answer: '0.7' },
+                    { question: 'Two coins tossed, P(both heads)?', answer: '1/4' },
+                    { question: 'What is the probability of impossible event?', answer: '0' },
+                    { question: 'What is the probability of certain event?', answer: '1' },
+                    { question: 'If P(A) = 0.4 and P(B) = 0.5, P(A and B)?', answer: '0.2' }
+                ],
+                'Statistics': [
+                    { question: 'Find the mean of 2, 4, 6, 8', answer: '5' },
+                    { question: 'Find the median of 3, 1, 4, 1, 5', answer: '3' },
+                    { question: 'Find the mode of 1, 2, 2, 3, 2', answer: '2' },
+                    { question: 'Find the range of 10, 5, 8, 3', answer: '7' },
+                    { question: 'What is the mean of 10, 20, 30?', answer: '20' },
+                    { question: 'Find the median of 2, 4, 6, 8, 10', answer: '6' },
+                    { question: 'Find the mode of 5, 5, 5, 3, 3', answer: '5' },
+                    { question: 'Find the range of 100, 50, 75', answer: '50' },
+                    { question: 'What is Q1 of 1, 2, 3, 4, 5?', answer: '1.5' },
+                    { question: 'What is the IQR of 1, 2, 3, 4, 5?', answer: '2' }
+                ],
+                'Calculus': [
+                    { question: 'Find dy/dx for y = 3x²', answer: '6x' },
+                    { question: 'Find dy/dx for y = 5x + 2', answer: '5' },
+                    { question: 'Integrate ∫2x dx', answer: 'x² + C' },
+                    { question: 'Integrate ∫5 dx', answer: '5x + C' },
+                    { question: 'Find dy/dx for y = x³', answer: '3x²' },
+                    { question: 'Find the second derivative of x⁴', answer: '12x²' },
+                    { question: 'Integrate ∫3x² dx', answer: 'x³ + C' },
+                    { question: 'Find dy/dx for y = sin(x)', answer: 'cos(x)' },
+                    { question: 'Find dy/dx for y = e^x', answer: 'e^x' },
+                    { question: 'Integrate ∫cos(x) dx', answer: 'sin(x) + C' }
+                ]
+            },
+            'Science': {
+                'Biology': [
+                    { question: 'What is the powerhouse of the cell?', answer: 'Mitochondria' },
+                    { question: 'What is the cell membrane made of?', answer: 'Phospholipid bilayer' },
+                    { question: 'What do plant cells have that animal cells do not?', answer: 'Cell wall and chloroplasts' },
+                    { question: 'What is the function of ribosomes?', answer: 'Protein synthesis' },
+                    { question: 'What is photosynthesis?', answer: 'Process to convert light into chemical energy' },
+                    { question: 'What is respiration?', answer: 'Process to release energy from food' },
+                    { question: 'How many chambers does a heart have?', answer: '4' },
+                    { question: 'What carries oxygen in blood?', answer: 'Hemoglobin in red blood cells' },
+                    { question: 'What is the basic unit of life?', answer: 'Cell' },
+                    { question: 'What controls all cell activities?', answer: 'Nucleus' }
+                ],
+                'Chemistry': [
+                    { question: 'What is H2O?', answer: 'Water' },
+                    { question: 'What is the chemical formula for salt?', answer: 'NaCl' },
+                    { question: 'What is the boiling point of water?', answer: '100°C' },
+                    { question: 'What is the freezing point of water?', answer: '0°C' },
+                    { question: 'What element has symbol O?', answer: 'Oxygen' },
+                    { question: 'What element has symbol C?', answer: 'Carbon' },
+                    { question: 'What are the three states of matter?', answer: 'Solid, Liquid, Gas' },
+                    { question: 'What is pH 7?', answer: 'Neutral' },
+                    { question: 'What is an ion?', answer: 'Charged atom or molecule' },
+                    { question: 'What is a compound?', answer: 'Two or more elements bonded' }
+                ],
+                'Physics': [
+                    { question: 'What is Newton\'s First Law?', answer: 'Object at rest stays at rest' },
+                    { question: 'What is Newton\'s Second Law?', answer: 'F = ma' },
+                    { question: 'What is the SI unit of force?', answer: 'Newton (N)' },
+                    { question: 'What is the speed of light?', answer: '3×10⁸ m/s' },
+                    { question: 'What is the acceleration due to gravity?', answer: '9.8 m/s²' },
+                    { question: 'What is kinetic energy?', answer: 'Energy of motion (½mv²)' },
+                    { question: 'What is potential energy?', answer: 'Stored energy (mgh)' },
+                    { question: 'What is density?', answer: 'Mass per unit volume' },
+                    { question: 'What is pressure?', answer: 'Force per unit area' },
+                    { question: 'What is the law of conservation of energy?', answer: 'Energy cannot be created or destroyed' }
+                ],
+                'Cells': [
+                    { question: 'What is a prokaryote?', answer: 'Cell without nucleus' },
+                    { question: 'What is a eukaryote?', answer: 'Cell with nucleus' },
+                    { question: 'What is the cell cycle?', answer: 'Growth, replication, and division' },
+                    { question: 'What is mitosis?', answer: 'Process of cell division' },
+                    { question: 'How many chromosomes in human cells?', answer: '46' },
+                    { question: 'What is DNA?', answer: 'Deoxyribonucleic acid' },
+                    { question: 'What are genes?', answer: 'Segments of DNA' },
+                    { question: 'What is a mutation?', answer: 'Change in DNA sequence' },
+                    { question: 'What do vesicles do?', answer: 'Transport materials in cells' },
+                    { question: 'What is the Golgi apparatus?', answer: 'Modifies and packages proteins' }
+                ],
+                'Forces': [
+                    { question: 'What is friction?', answer: 'Force opposing motion' },
+                    { question: 'What is tension?', answer: 'Pulling force in ropes/cables' },
+                    { question: 'What is the normal force?', answer: 'Force perpendicular to surface' },
+                    { question: 'What is weight?', answer: 'Force due to gravity (mg)' },
+                    { question: 'What is net force?', answer: 'Sum of all forces' },
+                    { question: 'What is equilibrium?', answer: 'Net force is zero' },
+                    { question: 'What is momentum?', answer: 'Mass times velocity' },
+                    { question: 'What is Newton\'s Third Law?', answer: 'Action and reaction are equal' },
+                    { question: 'What is centripetal force?', answer: 'Force toward center of circular motion' },
+                    { question: 'What is work?', answer: 'Force times distance (F×d)' }
+                ],
+                'Energy': [
+                    { question: 'What is energy?', answer: 'Capacity to do work' },
+                    { question: 'What is thermal energy?', answer: 'Energy from heat' },
+                    { question: 'What is renewable energy?', answer: 'Energy from replenishable sources' },
+                    { question: 'What is fossil fuel?', answer: 'Organic material from ancient organisms' },
+                    { question: 'What is a watt?', answer: 'Unit of power (energy per second)' },
+                    { question: 'What is efficiency?', answer: 'Useful energy output / total energy input' },
+                    { question: 'What are examples of renewable energy?', answer: 'Solar, wind, hydroelectric' },
+                    { question: 'What is nuclear energy?', answer: 'Energy from atomic reactions' },
+                    { question: 'What is geothermal energy?', answer: 'Heat energy from Earth' },
+                    { question: 'What is chemical energy?', answer: 'Energy stored in chemical bonds' }
+                ],
+                'Electricity': [
+                    { question: 'What is Ohm\'s Law?', answer: 'V = IR' },
+                    { question: 'What is a conductor?', answer: 'Material allowing electricity to flow' },
+                    { question: 'What is an insulator?', answer: 'Material preventing electricity flow' },
+                    { question: 'What is current?', answer: 'Flow of electric charge' },
+                    { question: 'What is voltage?', answer: 'Electric potential difference' },
+                    { question: 'What is resistance?', answer: 'Opposition to current flow' },
+                    { question: 'What is power?', answer: 'P = VI' },
+                    { question: 'What is a circuit?', answer: 'Complete path for current' },
+                    { question: 'What is AC current?', answer: 'Alternating current' },
+                    { question: 'What is DC current?', answer: 'Direct current' }
+                ],
+                'Organic Chemistry': [
+                    { question: 'What is the formula for methane?', answer: 'CH₄' },
+                    { question: 'What is the formula for ethane?', answer: 'C₂H₆' },
+                    { question: 'What is the formula for ethene?', answer: 'C₂H₄' },
+                    { question: 'What is a hydrocarbon?', answer: 'Compound of carbon and hydrogen' },
+                    { question: 'What is combustion?', answer: 'Reaction with oxygen producing heat' },
+                    { question: 'What is an alkane?', answer: 'Hydrocarbon with only single bonds' },
+                    { question: 'What is an alkene?', answer: 'Hydrocarbon with double bonds' },
+                    { question: 'What is a polymer?', answer: 'Long chain of repeating units' },
+                    { question: 'What is fermentation?', answer: 'Process producing ethanol from glucose' },
+                    { question: 'What is oxidation?', answer: 'Loss of electrons or gain of oxygen' }
+                ],
+                'Genetics': [
+                    { question: 'What is a gene?', answer: 'Unit of heredity' },
+                    { question: 'What is a dominant allele?', answer: 'Allele expressed when present' },
+                    { question: 'What is a recessive allele?', answer: 'Allele only expressed when homozygous' },
+                    { question: 'What is a Punnett square?', answer: 'Tool for predicting genetic outcomes' },
+                    { question: 'What is heterozygous?', answer: 'Two different alleles' },
+                    { question: 'What is homozygous?', answer: 'Two identical alleles' },
+                    { question: 'What is meiosis?', answer: 'Process producing sex cells' },
+                    { question: 'What is mitosis?', answer: 'Process producing identical cells' },
+                    { question: 'What is inheritance?', answer: 'Passing traits to offspring' },
+                    { question: 'What is genetic variation?', answer: 'Differences in genes within population' }
+                ],
+                'Space': [
+                    { question: 'What is our Sun?', answer: 'Star at center of solar system' },
+                    { question: 'How many planets are in our solar system?', answer: '8' },
+                    { question: 'What is an astronomical unit (AU)?', answer: 'Distance from Earth to Sun' },
+                    { question: 'What is a light year?', answer: 'Distance light travels in a year' },
+                    { question: 'What is a black hole?', answer: 'Region with extreme gravity' },
+                    { question: 'What is a supernova?', answer: 'Explosive death of a star' },
+                    { question: 'What is a galaxy?', answer: 'Collection of billions of stars' },
+                    { question: 'What is the Big Bang?', answer: 'Origin of the universe' },
+                    { question: 'What is a meteor?', answer: 'Space rock entering Earth\'s atmosphere' },
+                    { question: 'What is a comet?', answer: 'Icy object in space' }
+                ]
+            }
+        };
+
+        // Topics
+        const mathsTopics = ['Number', 'Fractions', 'Decimals', 'Percentages', 'Algebra', 'Geometry', 'Ratio', 'Probability', 'Statistics', 'Calculus'];
+        const scienceTopics = ['Biology', 'Chemistry', 'Physics', 'Cells', 'Forces', 'Energy', 'Electricity', 'Organic Chemistry', 'Genetics', 'Space'];
+
+        // Questions - Differentiated by Year Group AND Topic
+        function getQuestionsRaw(year, subject, topic) {
+            const yearLevel = parseInt(year.replace('Year ', ''));
+
+            if (subject === 'Maths') {
+                // KS2 (Years 3-6): Basic arithmetic
+                if (yearLevel <= 6) {
+                    const topicQuestions = {
+                        'Number': [
+                            { q: 'What is 5 + 3?', opts: ['8', '6', '9', '7'], ans: '8' },
+                            { q: 'What is 10 - 4?', opts: ['6', '5', '7', '8'], ans: '6' },
+                            { q: 'What is 2 × 3?', opts: ['6', '5', '8', '4'], ans: '6' },
+                            { q: 'What is half of 12?', opts: ['6', '5', '7', '8'], ans: '6' },
+                            { q: 'What is 20 ÷ 2?', opts: ['10', '5', '20', '2'], ans: '10' },
+                            { q: 'What is 3/4 as a decimal?', opts: ['0.75', '0.5', '0.25', '0.9'], ans: '0.75' },
+                            { q: 'What is 25% of 100?', opts: ['25', '50', '75', '10'], ans: '25' },
+                            { q: 'How many sides does a triangle have?', opts: ['3', '4', '5', '6'], ans: '3' },
+                            { q: 'What is 7 × 8?', opts: ['56', '54', '60', '48'], ans: '56' },
+                            { q: 'What is 100 ÷ 5?', opts: ['20', '15', '25', '10'], ans: '20' }
+                        ],
+                        'Fractions': [
+                            { q: 'What is 1/2 + 1/4?', opts: ['3/4', '2/4', '1/4', '3/8'], ans: '3/4' },
+                            { q: 'What is 3/4 as a decimal?', opts: ['0.75', '0.34', '0.43', '0.3'], ans: '0.75' },
+                            { q: 'Simplify: 6/8', opts: ['3/4', '2/4', '3/8', '6/4'], ans: '3/4' },
+                            { q: 'What is 1/2 × 1/2?', opts: ['1/4', '1/2', '1', '2/4'], ans: '1/4' },
+                            { q: 'What is 2/3 + 1/3?', opts: ['1', '3/3', '2/3', '3/6'], ans: '1' },
+                            { q: 'What is 3/5 as a decimal?', opts: ['0.6', '0.3', '0.5', '0.35'], ans: '0.6' },
+                            { q: 'What is 1/2 ÷ 1/2?', opts: ['1', '1/2', '2', '1/4'], ans: '1' },
+                            { q: 'Is 2/4 equal to 1/2?', opts: ['Yes', 'No', 'Maybe', 'Sometimes'], ans: 'Yes' },
+                            { q: 'What is 5/8 - 1/8?', opts: ['4/8', '6/8', '3/8', '5/8'], ans: '4/8' },
+                            { q: 'What is 1/4 + 1/4?', opts: ['1/2', '2/4', '1/8', '2/8'], ans: '1/2' }
+                        ],
+                        'Decimals': [
+                            { q: 'What is 0.5 + 0.3?', opts: ['0.8', '0.2', '0.35', '0.53'], ans: '0.8' },
+                            { q: 'What is 1.5 × 2?', opts: ['3', '3.5', '2.5', '1.5'], ans: '3' },
+                            { q: 'What is 2.4 ÷ 2?', opts: ['1.2', '2.4', '4.8', '0.6'], ans: '1.2' },
+                            { q: 'Round 3.47 to 1 d.p.', opts: ['3.5', '3.4', '3.0', '4.0'], ans: '3.5' },
+                            { q: 'What is 0.1 + 0.01?', opts: ['0.11', '0.2', '0.01', '0.101'], ans: '0.11' },
+                            { q: 'What is 5.5 - 2.3?', opts: ['3.2', '2.8', '3.8', '7.8'], ans: '3.2' },
+                            { q: 'What is 0.25 × 4?', opts: ['1', '0.25', '4', '0.1'], ans: '1' },
+                            { q: 'Which is bigger: 0.3 or 0.03?', opts: ['0.3', '0.03', 'Equal', 'Cannot tell'], ans: '0.3' },
+                            { q: 'What is 10.5 ÷ 5?', opts: ['2.1', '5.25', '10.5', '1.05'], ans: '2.1' },
+                            { q: 'What is 0.5 + 0.5?', opts: ['1', '1.0', '0.10', '5'], ans: '1' }
+                        ],
+                        'Percentages': [
+                            { q: 'What is 25% of 100?', opts: ['25', '50', '75', '100'], ans: '25' },
+                            { q: 'What is 50% of 80?', opts: ['40', '80', '20', '60'], ans: '40' },
+                            { q: 'What is 3/4 as a percentage?', opts: ['75%', '25%', '50%', '100%'], ans: '75%' },
+                            { q: 'What is 10% of 50?', opts: ['5', '10', '50', '45'], ans: '5' },
+                            { q: 'Is 50% the same as 1/2?', opts: ['Yes', 'No', 'Maybe', 'Different'], ans: 'Yes' },
+                            { q: 'What is 20% of 100?', opts: ['20', '80', '50', '100'], ans: '20' },
+                            { q: 'What is 1% of 1000?', opts: ['10', '100', '1000', '1'], ans: '10' },
+                            { q: 'What percentage is 1 of 4?', opts: ['25%', '50%', '75%', '100%'], ans: '25%' },
+                            { q: 'What is 5% of 200?', opts: ['10', '20', '50', '100'], ans: '10' },
+                            { q: 'What is 100% of 50?', opts: ['50', '100', '0', '150'], ans: '50' }
+                        ],
+                        'Algebra': [
+                            { q: 'What is 2x + 3 when x = 1?', opts: ['5', '6', '4', '7'], ans: '5' },
+                            { q: 'Simplify: 2a + 3a', opts: ['5a', '6a', 'a', '2a'], ans: '5a' },
+                            { q: 'What is x if 2x = 10?', opts: ['5', '10', '2', '8'], ans: '5' },
+                            { q: 'What is 3x + 2 when x = 2?', opts: ['8', '7', '6', '9'], ans: '8' },
+                            { q: 'Simplify: 4b + b - 2b', opts: ['3b', '4b', '2b', '5b'], ans: '3b' },
+                            { q: 'What is x + 5 = 12?', opts: ['7', '8', '6', '17'], ans: '7' },
+                            { q: 'What is 2x = 8?', opts: ['4', '8', '2', '6'], ans: '4' },
+                            { q: 'Simplify: a + 2a + 3a', opts: ['6a', '5a', '7a', '8a'], ans: '6a' },
+                            { q: 'What is 5x + 1 when x = 1?', opts: ['6', '5', '7', '8'], ans: '6' },
+                            { q: 'What is y if y - 3 = 5?', opts: ['8', '7', '6', '9'], ans: '8' }
+                        ],
+                        'Geometry': [
+                            { q: 'What is the area of a 5cm × 3cm rectangle?', opts: ['15cm²', '8cm²', '16cm²', '10cm²'], ans: '15cm²' },
+                            { q: 'How many sides does a square have?', opts: ['4', '3', '6', '8'], ans: '4' },
+                            { q: 'What is the angle in a corner of a square?', opts: ['90°', '180°', '45°', '60°'], ans: '90°' },
+                            { q: 'How many sides does a triangle have?', opts: ['3', '4', '5', '6'], ans: '3' },
+                            { q: 'What is the perimeter of a 4cm square?', opts: ['16cm', '8cm', '12cm', '20cm'], ans: '16cm' },
+                            { q: 'How many vertices does a triangle have?', opts: ['3', '4', '5', '6'], ans: '3' },
+                            { q: 'What shape has 6 sides?', opts: ['Hexagon', 'Pentagon', 'Square', 'Triangle'], ans: 'Hexagon' },
+                            { q: 'What is the perimeter of a 5cm × 3cm rectangle?', opts: ['16cm', '15cm', '8cm', '10cm'], ans: '16cm' },
+                            { q: 'How many right angles does a rectangle have?', opts: ['4', '2', '6', '8'], ans: '4' },
+                            { q: 'What shape has 5 sides?', opts: ['Pentagon', 'Hexagon', 'Square', 'Triangle'], ans: 'Pentagon' }
+                        ],
+                        'Ratio': [
+                            { q: 'Express 2:4 in simplest form', opts: ['1:2', '2:4', '4:2', '1:4'], ans: '1:2' },
+                            { q: 'What is the ratio 3:6 simplified?', opts: ['1:2', '3:6', '2:1', '1:3'], ans: '1:2' },
+                            { q: 'If the ratio is 1:2 and first part is 5, what is second?', opts: ['10', '5', '2', '7'], ans: '10' },
+                            { q: 'Express 4:8 in simplest form', opts: ['1:2', '2:4', '1:4', '2:1'], ans: '1:2' },
+                            { q: 'What is the ratio 6:9 simplified?', opts: ['2:3', '3:2', '1:2', '2:1'], ans: '2:3' },
+                            { q: 'If ratio is 1:3 and first is 2, what is second?', opts: ['6', '3', '2', '4'], ans: '6' },
+                            { q: 'Express 5:10 in simplest form', opts: ['1:2', '5:10', '2:1', '1:5'], ans: '1:2' },
+                            { q: 'What is 2:4 as a fraction?', opts: ['1/2', '2/4', '1/4', '2/1'], ans: '1/2' },
+                            { q: 'If ratio 1:1 and total is 10, each part is?', opts: ['5', '10', '1', '15'], ans: '5' },
+                            { q: 'Express 3:9 in simplest form', opts: ['1:3', '3:9', '1:9', '3:1'], ans: '1:3' }
+                        ],
+                        'Probability': [
+                            { q: 'What is the probability of rolling a 1 on a die?', opts: ['1/6', '1/3', '1/2', '1'], ans: '1/6' },
+                            { q: 'If a coin is tossed, P(heads) is?', opts: ['1/2', '1/4', '1/3', '1'], ans: '1/2' },
+                            { q: 'What is the probability of an impossible event?', opts: ['0', '1/2', '1', '1/3'], ans: '0' },
+                            { q: 'What is the probability of a certain event?', opts: ['1', '1/2', '0', '1/3'], ans: '1' },
+                            { q: 'P(rolling odd) on a die is?', opts: ['1/2', '1/3', '1/6', '1/4'], ans: '1/2' },
+                            { q: 'What is P(rolling 6) on a die?', opts: ['1/6', '1/3', '1/2', '1/4'], ans: '1/6' },
+                            { q: 'Two coins tossed, P(both heads)?', opts: ['1/4', '1/2', '1/3', '1/8'], ans: '1/4' },
+                            { q: 'What is P(not rolling 1) on a die?', opts: ['5/6', '1/6', '1/2', '1/3'], ans: '5/6' },
+                            { q: 'If P(rain) = 0.3, P(no rain)?', opts: ['0.7', '0.3', '0.5', '0.2'], ans: '0.7' },
+                            { q: 'What is the probability of rolling 1 or 2?', opts: ['1/3', '1/6', '1/2', '2/3'], ans: '1/3' }
+                        ],
+                        'Statistics': [
+                            { q: 'Find the mean of 2, 4, 6', opts: ['4', '3', '5', '6'], ans: '4' },
+                            { q: 'Find the median of 1, 3, 5', opts: ['3', '1', '5', '4'], ans: '3' },
+                            { q: 'Find the mode of 1, 2, 2, 3', opts: ['2', '1', '3', '1.5'], ans: '2' },
+                            { q: 'Find the range of 1, 5, 3', opts: ['4', '3', '5', '2'], ans: '4' },
+                            { q: 'What is the mean of 10, 20, 30?', opts: ['20', '10', '30', '15'], ans: '20' },
+                            { q: 'Find the median of 2, 4, 6', opts: ['4', '2', '6', '3'], ans: '4' },
+                            { q: 'Find the mode of 5, 5, 3, 3', opts: ['5 and 3', '5', '3', '4'], ans: '5 and 3' },
+                            { q: 'Find the range of 0, 10', opts: ['10', '0', '5', '15'], ans: '10' },
+                            { q: 'What is the mean of 5, 5, 5?', opts: ['5', '10', '15', '3'], ans: '5' },
+                            { q: 'Find the median of 1, 2, 3, 4', opts: ['2.5', '2', '3', '1.5'], ans: '2.5' }
+                        ],
+                        'Calculus': [
+                            { q: 'What does differentiation find?', opts: ['Rate of change', 'Total area', 'Volume', 'Sum'], ans: 'Rate of change' },
+                            { q: 'What is the opposite of differentiation?', opts: ['Integration', 'Subtraction', 'Multiplication', 'Division'], ans: 'Integration' },
+                            { q: 'What is the gradient at a point?', opts: ['Slope of curve', 'Height', 'Width', 'Area'], ans: 'Slope of curve' },
+                            { q: 'What does integration find?', opts: ['Area under curve', 'Slope', 'Height', 'Width'], ans: 'Area under curve' },
+                            { q: 'dy/dx means?', opts: ['Rate of change', 'Product', 'Sum', 'Quotient'], ans: 'Rate of change' },
+                            { q: 'What is a constant in integration?', opts: ['C', 'π', 'e', 'φ'], ans: 'C' },
+                            { q: 'What does the tangent show?', opts: ['Slope at a point', 'Area', 'Distance', 'Speed'], ans: 'Slope at a point' },
+                            { q: 'What is a limit?', opts: ['Value approached', 'Maximum', 'Minimum', 'Average'], ans: 'Value approached' },
+                            { q: 'What is a derivative?', opts: ['Rate of change', 'Original function', 'Integral', 'Sum'], ans: 'Rate of change' },
+                            { q: 'What sign for integration?', opts: ['∫', 'd', 'Δ', 'σ'], ans: '∫' }
+                        ]
+                    };
+                    return topicQuestions[topic] || [];
+                }
+                // KS3 (Years 7-9): Algebra and geometry basics
+                else if (yearLevel <= 9) {
+                    const topicQuestions = {
+                        'Number': [
+                            { q: 'What is 15 + 27?', opts: ['42', '40', '45', '38'], ans: '42' },
+                            { q: 'What is 50 - 23?', opts: ['27', '30', '25', '28'], ans: '27' },
+                            { q: 'What is 12 × 11?', opts: ['132', '130', '144', '121'], ans: '132' },
+                            { q: 'Is 17 prime?', opts: ['Yes', 'No', 'Maybe', 'Unknown'], ans: 'Yes' },
+                            { q: 'What is -3 + 8?', opts: ['5', '3', '11', '-5'], ans: '5' },
+                            { q: 'What is -5 - 3?', opts: ['-8', '-2', '8', '2'], ans: '-8' },
+                            { q: 'What is 2³?', opts: ['8', '6', '9', '5'], ans: '8' },
+                            { q: 'What is √36?', opts: ['6', '18', '4', '9'], ans: '6' },
+                            { q: 'What is 15 ÷ 3?', opts: ['5', '12', '18', '45'], ans: '5' },
+                            { q: 'What is 10²?', opts: ['100', '20', '50', '200'], ans: '100' }
+                        ],
+                        'Fractions': [
+                            { q: 'What is 1/2 + 1/3?', opts: ['5/6', '2/5', '1/5', '3/6'], ans: '5/6' },
+                            { q: 'What is 3/4 + 1/8?', opts: ['7/8', '4/12', '1/2', '3/8'], ans: '7/8' },
+                            { q: 'What is 2/3 × 1/2?', opts: ['1/3', '2/6', '3/5', '1/2'], ans: '1/3' },
+                            { q: 'What is 3/4 ÷ 1/2?', opts: ['3/2', '3/8', '1/2', '6/4'], ans: '3/2' },
+                            { q: 'Simplify: 8/12', opts: ['2/3', '1/2', '4/6', '8/12'], ans: '2/3' },
+                            { q: 'What is 5/6 - 1/3?', opts: ['1/2', '4/6', '4/3', '5/9'], ans: '1/2' },
+                            { q: 'What is 2/5 + 3/5?', opts: ['1', '5/10', '5/5', '1/5'], ans: '1' },
+                            { q: 'Convert 7/4 to mixed number', opts: ['1 3/4', '2 1/4', '1 1/4', '3/4'], ans: '1 3/4' },
+                            { q: 'What is 1/4 × 2?', opts: ['1/2', '1/4', '2/4', '1/8'], ans: '1/2' },
+                            { q: 'What is 3/5 + 1/5?', opts: ['4/5', '5/10', '3/10', '1/5'], ans: '4/5' }
+                        ],
+                        'Decimals': [
+                            { q: 'What is 3.5 + 2.3?', opts: ['5.8', '5.5', '5.2', '6.8'], ans: '5.8' },
+                            { q: 'What is 10.5 - 4.2?', opts: ['6.3', '6.7', '5.3', '14.7'], ans: '6.3' },
+                            { q: 'What is 2.5 × 4?', opts: ['10', '10.5', '8', '2.1'], ans: '10' },
+                            { q: 'What is 9.6 ÷ 3?', opts: ['3.2', '3.6', '2.8', '12.6'], ans: '3.2' },
+                            { q: 'Round 7.386 to 2 d.p.', opts: ['7.39', '7.38', '7.4', '7.40'], ans: '7.39' },
+                            { q: 'What is 0.6 + 0.04?', opts: ['0.64', '0.10', '0.46', '0.044'], ans: '0.64' },
+                            { q: 'What is 5.5 × 2?', opts: ['11', '10', '12', '5.5'], ans: '11' },
+                            { q: 'Order: 0.5, 0.05, 0.55', opts: ['0.05, 0.5, 0.55', '0.5, 0.05, 0.55', '0.55, 0.5, 0.05', '0.05, 0.55, 0.5'], ans: '0.05, 0.5, 0.55' },
+                            { q: 'What is 15.2 ÷ 4?', opts: ['3.8', '3.2', '4.8', '5.2'], ans: '3.8' },
+                            { q: 'What is 2.25 + 1.75?', opts: ['4', '3.5', '3', '5'], ans: '4' }
+                        ],
+                        'Percentages': [
+                            { q: 'What is 15% of 200?', opts: ['30', '15', '50', '200'], ans: '30' },
+                            { q: 'Increase 100 by 20%', opts: ['120', '100', '80', '20'], ans: '120' },
+                            { q: 'Decrease 200 by 25%', opts: ['150', '175', '50', '200'], ans: '150' },
+                            { q: 'What percentage is 25 of 100?', opts: ['25%', '50%', '75%', '100%'], ans: '25%' },
+                            { q: 'What is 10% of 350?', opts: ['35', '50', '350', '3.5'], ans: '35' },
+                            { q: 'Express 0.75 as a percentage', opts: ['75%', '7.5%', '750%', '0.75%'], ans: '75%' },
+                            { q: 'What is 5% of 400?', opts: ['20', '40', '200', '2'], ans: '20' },
+                            { q: 'If 40% is 20, what is the total?', opts: ['50', '40', '20', '100'], ans: '50' },
+                            { q: 'What is 33.3% of 300?', opts: ['100', '99', '150', '200'], ans: '100' },
+                            { q: 'Increase 50 by 100%', opts: ['100', '50', '150', '200'], ans: '100' }
+                        ],
+                        'Algebra': [
+                            { q: 'Solve: 2x + 3 = 11', opts: ['4', '5', '6', '7'], ans: '4' },
+                            { q: 'Simplify: 3a + 2a - a', opts: ['4a', '5a', '3a', '6a'], ans: '4a' },
+                            { q: 'Expand: 2(x + 3)', opts: ['2x + 6', '2x + 3', 'x + 6', '2x + 2'], ans: '2x + 6' },
+                            { q: 'Solve: 5x - 10 = 15', opts: ['5', '3', '6', '4'], ans: '5' },
+                            { q: 'What is x if 3x = 21?', opts: ['7', '8', '6', '18'], ans: '7' },
+                            { q: 'Expand: (x + 2)(x + 3)', opts: ['x² + 5x + 6', 'x² + 6x + 5', 'x² + 3x + 6', 'x² + 5x + 5'], ans: 'x² + 5x + 6' },
+                            { q: 'Factorize: x² + 5x + 6', opts: ['(x + 2)(x + 3)', '(x + 1)(x + 6)', '(x + 2)(x + 2)', '(x - 2)(x - 3)'], ans: '(x + 2)(x + 3)' },
+                            { q: 'Solve: x² = 16', opts: ['x = 4 or -4', 'x = 8', 'x = 2', 'x = 16'], ans: 'x = 4 or -4' },
+                            { q: 'What is 2x + 3 when x = 5?', opts: ['13', '10', '8', '15'], ans: '13' },
+                            { q: 'Simplify: 4x - 2x + 6', opts: ['2x + 6', '6x + 6', 'x + 6', '2x - 6'], ans: '2x + 6' }
+                        ],
+                        'Geometry': [
+                            { q: 'Find the area: 5cm × 3cm rectangle', opts: ['15cm²', '8cm²', '16cm²', '10cm²'], ans: '15cm²' },
+                            { q: 'What is the angle sum in a triangle?', opts: ['180°', '90°', '360°', '270°'], ans: '180°' },
+                            { q: 'How many sides does a hexagon have?', opts: ['6', '4', '5', '8'], ans: '6' },
+                            { q: 'Find the perimeter of a 4cm square', opts: ['16cm', '8cm', '4cm', '20cm'], ans: '16cm' },
+                            { q: 'Find the area of a circle (r=5cm)', opts: ['78.5cm²', '31.4cm²', '50cm²', '25cm²'], ans: '78.5cm²' },
+                            { q: 'What is the angle sum in a quadrilateral?', opts: ['360°', '180°', '270°', '90°'], ans: '360°' },
+                            { q: 'Find the volume of a 3cm cube', opts: ['27cm³', '9cm³', '81cm³', '18cm³'], ans: '27cm³' },
+                            { q: 'What is the hypotenuse of a 3-4-5 triangle?', opts: ['5', '3', '4', '7'], ans: '5' },
+                            { q: 'Find the circumference (r=2cm)', opts: ['12.57cm', '6.28cm', '25.13cm', '4cm'], ans: '12.57cm' },
+                            { q: 'What is the perimeter of a 5cm × 3cm rectangle?', opts: ['16cm', '15cm', '8cm', '10cm'], ans: '16cm' }
+                        ],
+                        'Ratio': [
+                            { q: 'Express 4:8 in simplest form', opts: ['1:2', '2:4', '4:8', '8:4'], ans: '1:2' },
+                            { q: 'If ratio 3:5, total 40, find first part', opts: ['15', '25', '20', '30'], ans: '15' },
+                            { q: 'If ratio 2:3, first is 10, find second', opts: ['15', '20', '10', '30'], ans: '15' },
+                            { q: 'What is 2:5 as a fraction?', opts: ['2/5', '5/2', '2/7', '5/7'], ans: '2/5' },
+                            { q: 'Express 6:9:12 in simplest form', opts: ['2:3:4', '3:3:6', '1:1.5:2', '6:9:12'], ans: '2:3:4' },
+                            { q: 'Ratio 1:4, total 100, each part?', opts: ['20, 80', '25, 75', '10, 90', '50, 50'], ans: '20, 80' },
+                            { q: 'Ratio 30:20 in simplest form?', opts: ['3:2', '2:3', '30:20', '15:10'], ans: '3:2' },
+                            { q: 'If ratio 5:3, first is 25, second?', opts: ['15', '25', '40', '30'], ans: '15' },
+                            { q: 'Express 8:12:4 in simplest form', opts: ['2:3:1', '4:6:2', '8:12:4', '1:1.5:0.5'], ans: '2:3:1' },
+                            { q: 'Ratio 1:2:3, total 60, find each', opts: ['10, 20, 30', '20, 20, 20', '15, 15, 30', '5, 10, 15'], ans: '10, 20, 30' }
+                        ],
+                        'Probability': [
+                            { q: 'What is P(rolling a 6)?', opts: ['1/6', '1/3', '1/2', '1/4'], ans: '1/6' },
+                            { q: 'What is P(picking red card)?', opts: ['1/2', '1/4', '1/3', '1/6'], ans: '1/2' },
+                            { q: 'Two coins tossed, P(both heads)?', opts: ['1/4', '1/2', '1/3', '1/8'], ans: '1/4' },
+                            { q: 'P(rolling odd) on die?', opts: ['1/2', '1/3', '1/6', '1/4'], ans: '1/2' },
+                            { q: '0.25 as probability = ?', opts: ['1/4', '1/2', '1/3', '1/5'], ans: '1/4' },
+                            { q: 'If P(rain)=0.3, P(no rain)?', opts: ['0.7', '0.3', '0.5', '0.2'], ans: '0.7' },
+                            { q: 'What is P(not 1 or 2 on die)?', opts: ['2/3', '1/3', '1/2', '1/6'], ans: '2/3' },
+                            { q: 'What is P(impossible event)?', opts: ['0', '1/2', '1', '0.5'], ans: '0' },
+                            { q: 'What is P(certain event)?', opts: ['1', '1/2', '0', '0.5'], ans: '1' },
+                            { q: 'Two dice, P(total 12)?', opts: ['1/36', '1/6', '1/12', '1/18'], ans: '1/36' }
+                        ],
+                        'Statistics': [
+                            { q: 'Find mean of 2, 4, 6, 8', opts: ['5', '4', '6', '7'], ans: '5' },
+                            { q: 'Find median of 3, 1, 4, 1, 5', opts: ['3', '1', '4', '5'], ans: '3' },
+                            { q: 'Find mode of 1, 2, 2, 3, 2', opts: ['2', '1', '3', '1.5'], ans: '2' },
+                            { q: 'Find range of 10, 5, 8, 3', opts: ['7', '5', '10', '13'], ans: '7' },
+                            { q: 'Mean of 10, 20, 30?', opts: ['20', '10', '30', '15'], ans: '20' },
+                            { q: 'Median of 2, 4, 6, 8, 10?', opts: ['6', '4', '8', '5'], ans: '6' },
+                            { q: 'Mode of 5, 5, 5, 3, 3?', opts: ['5', '3', '4', '5 and 3'], ans: '5' },
+                            { q: 'Range of 100, 50, 75?', opts: ['50', '25', '100', '75'], ans: '50' },
+                            { q: 'Q1 of 1, 2, 3, 4, 5?', opts: ['1.5', '1', '2', '2.5'], ans: '1.5' },
+                            { q: 'IQR of 1, 2, 3, 4, 5?', opts: ['2', '1', '3', '4'], ans: '2' }
+                        ],
+                        'Calculus': [
+                            { q: 'Find dy/dx for y = 3x²', opts: ['6x', '3x', '6x²', 'x²'], ans: '6x' },
+                            { q: 'Find dy/dx for y = 5x + 2', opts: ['5', '5x', '2', '7'], ans: '5' },
+                            { q: 'Integrate ∫2x dx', opts: ['x² + C', '2x² + C', 'x + C', '2x + C'], ans: 'x² + C' },
+                            { q: 'Integrate ∫5 dx', opts: ['5x + C', '5 + C', 'x + C', '5x'], ans: '5x + C' },
+                            { q: 'dy/dx of x³?', opts: ['3x²', 'x²', '3x', '3x³'], ans: '3x²' },
+                            { q: '2nd derivative of x⁴?', opts: ['12x²', '4x³', '12x', '4x²'], ans: '12x²' },
+                            { q: 'Integrate ∫3x² dx', opts: ['x³ + C', '3x³ + C', '3x + C', 'x + C'], ans: 'x³ + C' },
+                            { q: 'dy/dx of sin(x)?', opts: ['cos(x)', '-cos(x)', 'sin(x)', '-sin(x)'], ans: 'cos(x)' },
+                            { q: 'dy/dx of e^x?', opts: ['e^x', 'x·e^(x-1)', 'e^(x-1)', 'e^(2x)'], ans: 'e^x' },
+                            { q: 'Integrate ∫cos(x) dx', opts: ['sin(x) + C', 'cos(x) + C', '-sin(x) + C', 'tan(x) + C'], ans: 'sin(x) + C' }
+                        ]
+                    };
+                    return topicQuestions[topic] || [];
+                }
+                // GCSE (Years 10-11): Advanced algebra and calculus basics
+                else if (yearLevel <= 11) {
+                    const topicQuestions = {
+                        'Number': [
+                            { q: 'Solve: x² - 5x + 6 = 0', opts: ['x = 2, 3', 'x = 1, 6', 'x = 2, 4', 'x = 3, 4'], ans: 'x = 2, 3' },
+                            { q: 'What is 2⁴ × 2³?', opts: ['2⁷', '2¹²', '4⁷', '4¹'], ans: '2⁷' },
+                            { q: 'Simplify √32', opts: ['4√2', '16√2', '2√8', '8√4'], ans: '4√2' },
+                            { q: 'What is (2³)²?', opts: ['2⁶', '2⁵', '2⁹', '4⁶'], ans: '2⁶' },
+                            { q: 'Solve: 3x = 27', opts: ['x = 3', 'x = 9', 'x = 27', 'x = 1'], ans: 'x = 3' },
+                            { q: 'What is -2 × -3?', opts: ['6', '-6', '1', '-1'], ans: '6' },
+                            { q: 'Express as power: ∜16', opts: ['2', '4', '8', '16'], ans: '2' },
+                            { q: 'Simplify √50', opts: ['5√2', '10√5', '25√2', '2√5'], ans: '5√2' },
+                            { q: 'What is 2⁻²?', opts: ['1/4', '1/2', '-4', '-2'], ans: '1/4' },
+                            { q: 'Solve: x³ = 125', opts: ['x = 5', 'x = 25', 'x = 3', 'x = 10'], ans: 'x = 5' }
+                        ],
+                        'Fractions': [
+                            { q: 'Rationalize: 1/√2', opts: ['√2/2', '1/2', '√2', '2/√2'], ans: '√2/2' },
+                            { q: 'What is (1/2)²?', opts: ['1/4', '1/2', '1', '2'], ans: '1/4' },
+                            { q: 'Simplify: (3/4) × (8/9)', opts: ['2/3', '24/36', '11/13', '3/9'], ans: '2/3' },
+                            { q: 'What is (1/3)³?', opts: ['1/27', '1/9', '1/3', '3'], ans: '1/27' },
+                            { q: 'Express as a fraction: 0.333...', opts: ['1/3', '1/2', '3/10', '33/100'], ans: '1/3' },
+                            { q: 'What is 5/6 ÷ 2/3?', opts: ['5/4', '10/18', '3/4', '10/6'], ans: '5/4' },
+                            { q: 'Simplify: 12/18', opts: ['2/3', '1/2', '4/6', '6/9'], ans: '2/3' },
+                            { q: 'What is 7/8 + 3/8?', opts: ['5/4', '10/8', '1', '4/8'], ans: '5/4' },
+                            { q: 'Express 0.75 as fraction', opts: ['3/4', '1/2', '7/10', '75/100'], ans: '3/4' },
+                            { q: 'What is 2/(1/2)?', opts: ['4', '2', '1', '8'], ans: '4' }
+                        ],
+                        'Decimals': [
+                            { q: 'Round 5.347 to 2 d.p.', opts: ['5.35', '5.34', '5.3', '5.4'], ans: '5.35' },
+                            { q: 'What is 3.6 × 2.5?', opts: ['9', '8', '10', '5.9'], ans: '9' },
+                            { q: 'What is 12.5 ÷ 2.5?', opts: ['5', '12.5', '2.5', '15'], ans: '5' },
+                            { q: 'Express 0.123... as fraction', opts: ['1/8', '123/1000', '1/9', '1/3'], ans: '1/8' },
+                            { q: 'What is 0.1 × 0.1?', opts: ['0.01', '0.1', '0.001', '1'], ans: '0.01' },
+                            { q: 'Round 7.986 to 1 d.p.', opts: ['8.0', '7.9', '8', '7.98'], ans: '8.0' },
+                            { q: 'What is 15.3 - 8.7?', opts: ['6.6', '7.6', '6.5', '24'], ans: '6.6' },
+                            { q: 'What is 0.25 ÷ 0.5?', opts: ['0.5', '0.25', '2', '1'], ans: '0.5' },
+                            { q: 'What is 2.5²?', opts: ['6.25', '5', '6.5', '625'], ans: '6.25' },
+                            { q: 'Express 5/8 as decimal', opts: ['0.625', '0.58', '0.5', '0.68'], ans: '0.625' }
+                        ],
+                        'Percentages': [
+                            { q: 'Increase 200 by 15%', opts: ['230', '215', '315', '185'], ans: '230' },
+                            { q: 'Decrease 500 by 20%', opts: ['400', '480', '520', '600'], ans: '400' },
+                            { q: 'What percentage is 15 of 75?', opts: ['20%', '25%', '15%', '30%'], ans: '20%' },
+                            { q: 'If 30% is 60, what is total?', opts: ['200', '180', '30', '100'], ans: '200' },
+                            { q: 'Find 18% of 450', opts: ['81', '90', '100', '432'], ans: '81' },
+                            { q: 'Express 2:5 as percentage', opts: ['40%', '25%', '50%', '20%'], ans: '40%' },
+                            { q: 'Compound interest: £100 at 10% for 2 years?', opts: ['121', '120', '110', '200'], ans: '121' },
+                            { q: 'What is 12.5% of 800?', opts: ['100', '80', '125', '90'], ans: '100' },
+                            { q: 'Decrease 150 by 30%', opts: ['105', '120', '180', '30'], ans: '105' },
+                            { q: 'Percentage change from 50 to 75?', opts: ['50%', '25%', '75%', '40%'], ans: '50%' }
+                        ],
+                        'Algebra': [
+                            { q: 'Solve: 3x² + x - 2 = 0', opts: ['x = 2/3 or -1', 'x = 1', 'x = 2', 'x = -2/3 or 1'], ans: 'x = 2/3 or -1' },
+                            { q: 'Expand: (2x - 3)(x + 4)', opts: ['2x² + 5x - 12', '2x² - 12', 'x² + x - 12', '2x² + 8x - 3x'], ans: '2x² + 5x - 12' },
+                            { q: 'Factorize: 2x² + 7x + 3', opts: ['(2x + 1)(x + 3)', '(x + 1)(x + 3)', '(2x + 3)(x + 1)', '(x + 3)(2x + 3)'], ans: '(2x + 1)(x + 3)' },
+                            { q: 'Solve: |2x - 3| = 5', opts: ['x = 4, -1', 'x = 2, 3', 'x = 1, 4', 'x = 3, 2'], ans: 'x = 4, -1' },
+                            { q: 'Rearrange y = 2x + 3 for x', opts: ['x = (y-3)/2', 'x = 2y + 3', 'x = y/2 - 3', 'x = y - 3'], ans: 'x = (y-3)/2' },
+                            { q: 'Solve: 2^x = 32', opts: ['x = 5', 'x = 16', 'x = 10', 'x = 2'], ans: 'x = 5' },
+                            { q: 'Factorize: x² - 9', opts: ['(x-3)(x+3)', '(x-3)²', '(x+3)²', 'x(x-9)'], ans: '(x-3)(x+3)' },
+                            { q: 'Expand: (x + 2)²', opts: ['x² + 4x + 4', 'x² + 4', 'x² + 4x + 2', 'x² + 2x + 4'], ans: 'x² + 4x + 4' },
+                            { q: 'Complete the square: x² + 6x', opts: ['(x+3)² - 9', '(x+3)²', '(x+6)² - 36', '(x+3)² + 9'], ans: '(x+3)² - 9' },
+                            { q: 'Solve: log(x) = 2 (base 10)', opts: ['x = 100', 'x = 10', 'x = 2', 'x = 20'], ans: 'x = 100' }
+                        ],
+                        'Geometry': [
+                            { q: 'Find the volume of sphere (r=3cm)', opts: ['113.1cm³', '36πcm³', '27πcm³', '36cm³'], ans: '113.1cm³' },
+                            { q: 'Find surface area of cube (s=5cm)', opts: ['150cm²', '125cm²', '50cm²', '30cm²'], ans: '150cm²' },
+                            { q: 'Find area of triangle (b=8, h=6)', opts: ['24cm²', '48cm²', '14cm²', '12cm²'], ans: '24cm²' },
+                            { q: 'Find volume of cylinder (r=2, h=5)', opts: ['62.8cm³', '20cm³', '31.4cm³', '40cm³'], ans: '62.8cm³' },
+                            { q: 'What is sin(30°)?', opts: ['0.5', '0.866', '1', '0'], ans: '0.5' },
+                            { q: 'What is cos(60°)?', opts: ['0.5', '0.866', '1', '0'], ans: '0.5' },
+                            { q: 'Find tan(45°)', opts: ['1', '0', '-1', '0.707'], ans: '1' },
+                            { q: 'Using Pythagoras with a=5, b=12', opts: ['c=13', 'c=7', 'c=17', 'c=8.5'], ans: 'c=13' },
+                            { q: 'Find arc length (r=5, θ=π/3)', opts: ['5.24cm', '10cm', '15.7cm', '2.62cm'], ans: '5.24cm' },
+                            { q: 'Find sector area (r=4, θ=π/2)', opts: ['12.57cm²', '25.13cm²', '50.27cm²', '6.28cm²'], ans: '12.57cm²' }
+                        ],
+                        'Ratio': [
+                            { q: 'In ratio 3:4:5, total 120, find parts', opts: ['30,40,50', '20,30,40', '36,48,60', '24,32,40'], ans: '30,40,50' },
+                            { q: 'Scale factor 1:50000, map 5cm = ?', opts: ['2.5km', '250m', '5km', '250km'], ans: '2.5km' },
+                            { q: 'If a:b = 2:3 and b=15, find a', opts: ['10', '15', '20', '22.5'], ans: '10' },
+                            { q: 'Divide 200 in ratio 1:3:4', opts: ['25,75,100', '50,50,100', '40,80,80', '20,60,120'], ans: '25,75,100' },
+                            { q: 'In ratio 5:2, if first is 25', opts: ['10', '12.5', '50', '2'], ans: '10' },
+                            { q: 'Express ratios 12:18:24 simply', opts: ['2:3:4', '4:6:8', '6:9:12', '3:4.5:6'], ans: '2:3:4' },
+                            { q: 'If ratio is 7:3 and total 200', opts: ['140, 60', '175, 25', '150, 50', '100, 100'], ans: '140, 60' },
+                            { q: 'Probability ratio 2:3:5, find P(first)', opts: ['0.2', '0.3', '0.5', '0.25'], ans: '0.2' },
+                            { q: 'Scale drawing 1:100, real length 50m', opts: ['50cm', '5cm', '500cm', '0.5cm'], ans: '50cm' },
+                            { q: 'In recipe ratio 1:2:3, if first is 200g', opts: ['400g, 600g', '200g, 300g', '100g, 300g', '600g, 900g'], ans: '400g, 600g' }
+                        ],
+                        'Probability': [
+                            { q: 'P(A) = 0.3, P(B) = 0.5, independent', opts: ['P(A and B) = 0.15', 'P(A and B) = 0.8', 'P(A or B) = 0.65', 'Cannot determine'], ans: 'P(A and B) = 0.15' },
+                            { q: 'Tree diagram: coin and die, total outcomes?', opts: ['12', '6', '8', '10'], ans: '12' },
+                            { q: 'P(not getting 6 on die)?', opts: ['5/6', '1/6', '1/2', '2/3'], ans: '5/6' },
+                            { q: 'In deck, P(black or face card)?', opts: ['8/13', '1/2', '15/52', '26/52'], ans: '8/13' },
+                            { q: 'Binomial: n=5, p=0.2, P(X=2)?', opts: ['0.205', '0.4', '0.1', '0.5'], ans: '0.205' },
+                            { q: 'Normal distribution: mean=100, SD=15, P(X>100)?', opts: ['0.5', '0.68', '0.95', '0.34'], ans: '0.5' },
+                            { q: 'Conditional: P(A|B) given P(A∩B)=0.12, P(B)=0.4', opts: ['0.3', '0.12', '0.4', '0.48'], ans: '0.3' },
+                            { q: 'Without replacement: 2 red from 5 red, 3 blue', opts: ['10/28', '5/14', '2/5', '25/64'], ans: '10/28' },
+                            { q: 'Cumulative frequency for quartiles uses?', opts: ['n/4, 2n/4, 3n/4', 'n/2, 3n/4', 'n/3, 2n/3', 'n/5, 2n/5'], ans: 'n/4, 2n/4, 3n/4' },
+                            { q: 'Chi-squared used for?', opts: ['Independence test', 'Mean comparison', 'Correlation', 'Goodness of fit'], ans: 'Independence test' }
+                        ],
+                        'Statistics': [
+                            { q: 'Standard deviation formula uses?', opts: ['√(Σ(x-μ)²/n)', 'Σ(x-μ)/n', 'max-min', 'Q3-Q1'], ans: '√(Σ(x-μ)²/n)' },
+                            { q: 'Find variance if SD = 5', opts: ['25', '5', '10', '2.5'], ans: '25' },
+                            { q: 'Outliers detected using?', opts: ['Q1 - 1.5×IQR, Q3 + 1.5×IQR', 'mean ± 2SD', 'max - min', 'mode'], ans: 'Q1 - 1.5×IQR, Q3 + 1.5×IQR' },
+                            { q: 'Correlation coefficient range', opts: ['-1 to 1', '0 to 1', '-∞ to ∞', '0 to 100'], ans: '-1 to 1' },
+                            { q: 'Line of best fit minimizes?', opts: ['Sum of squared residuals', 'Average', 'Range', 'Mode'], ans: 'Sum of squared residuals' },
+                            { q: 'For skewed data, use median over?', opts: ['Mean', 'Mode', 'Range', 'SD'], ans: 'Mean' },
+                            { q: 'Frequency polygon joins?', opts: ['Midpoints of class intervals', 'Upper bounds', 'Lower bounds', 'Means'], ans: 'Midpoints of class intervals' },
+                            { q: 'Stratified sampling ensures?', opts: ['Each stratum represented', 'Random selection', 'Bias elimination', 'Equal group sizes'], ans: 'Each stratum represented' },
+                            { q: 'Hypothesis test null hypothesis assumes', opts: ['No effect/difference', 'Effect exists', 'Data normal', 'Large sample'], ans: 'No effect/difference' },
+                            { q: 'P-value < 0.05 means?', opts: ['Reject H0 at 5% level', 'Accept H0', 'Inconclusive', 'Normal distribution'], ans: 'Reject H0 at 5% level' }
+                        ],
+                        'Calculus': [
+                            { q: 'Find dy/dx for y = 3x² + 2x', opts: ['6x + 2', '6x + 1', '3x + 2', '9x + 2'], ans: '6x + 2' },
+                            { q: 'Integrate ∫(3x² + 2x) dx', opts: ['x³ + x² + C', 'x³ + x + C', '3x³ + 2x² + C', 'x³ + 2x + C'], ans: 'x³ + x² + C' },
+                            { q: 'Second derivative of x⁴', opts: ['12x²', '4x³', '12x', '4x²'], ans: '12x²' },
+                            { q: 'Stationary point where?', opts: ['dy/dx = 0', 'dy/dx > 0', 'dy/dx < 0', 'y = 0'], ans: 'dy/dx = 0' },
+                            { q: 'Maximum if 2nd derivative?', opts: ['< 0', '> 0', '= 0', 'undefined'], ans: '< 0' },
+                            { q: '∫e^x dx = ?', opts: ['e^x + C', 'xe^x + C', 'e^(x²) + C', 'e^x'], ans: 'e^x + C' },
+                            { q: '∫1/x dx = ?', opts: ['ln|x| + C', '1/x² + C', 'x + C', '-1/x + C'], ans: 'ln|x| + C' },
+                            { q: 'Chain rule: dy/dx if y=f(g(x))', opts: ['f\'(g(x))×g\'(x)', 'f\'(x)×g\'(x)', 'f\'(g(x))+g\'(x)', 'f(x)×g\'(x)'], ans: 'f\'(g(x))×g\'(x)' },
+                            { q: 'Area under curve from a to b = ?', opts: ['∫ₐᵇ f(x) dx', '(b-a)×f(x)', 'f(b) - f(a)', 'Average(f(a), f(b))'], ans: '∫ₐᵇ f(x) dx' },
+                            { q: 'Solve: e^x = 7', opts: ['x = ln(7)', 'x = log(7)', 'x = 7', 'x = e⁷'], ans: 'x = ln(7)' }
+                        ]
+                    };
+                    return topicQuestions[topic] || [];
+                }
+                // A-Level (Years 12-13): Calculus and advanced topics
+                else {
+                    const topicQuestions = {
+                        'Number': [
+                            { q: 'Solve: e^x = 7', opts: ['x = ln(7)', 'x = log(7)', 'x = 7', 'x = e⁷'], ans: 'x = ln(7)' },
+                            { q: 'What is log₂(8)?', opts: ['3', '4', '2', '1'], ans: '3' },
+                            { q: 'Solve: 2^(x+1) = 16', opts: ['x = 3', 'x = 4', 'x = 2', 'x = 8'], ans: 'x = 3' },
+                            { q: 'Complex: |3 + 4i|', opts: ['5', '7', '12', '25'], ans: '5' },
+                            { q: 'Convert to standard form: 0.0003', opts: ['3×10⁻⁴', '3×10⁻³', '3×10⁴', '3×10³'], ans: '3×10⁻⁴' },
+                            { q: '(1 + i)² = ?', opts: ['2i', '1 + 2i', '2 + 2i', '1 + i'], ans: '2i' },
+                            { q: 'What is log₁₀(1/100)?', opts: ['-2', '-1', '2', '100'], ans: '-2' },
+                            { q: 'Solve: ln(x) = 2', opts: ['x = e²', 'x = 2', 'x = e', 'x = 10'], ans: 'x = e²' },
+                            { q: '(2 + 3i)(1 - i) = ?', opts: ['5 + i', '2 + 3i', '2 - 3i', '-1 + 4i'], ans: '5 + i' },
+                            { q: 'If a^log(a) = 100, then log(100) = ?', opts: ['2', '100', 'a', '2a'], ans: '2' }
+                        ],
+                        'Fractions': [
+                            { q: 'Partial fractions: 5/(x(x+1))', opts: ['5/x - 5/(x+1)', '5/x + 5/(x+1)', '1/x - 1/(x+1)', '5 - 5x'], ans: '5/x - 5/(x+1)' },
+                            { q: 'Express (3x+1)/(x²+x) in partial fractions', opts: ['1/x + 2/(x+1)', '3/x + 1/(x+1)', '2/x + 1/(x+1)', '1/x + 1/(x+1)'], ans: '1/x + 2/(x+1)' },
+                            { q: 'Decompose: 1/((x-1)(x-2))', opts: ['-1/(x-1) + 1/(x-2)', '1/(x-1) - 1/(x-2)', '1/(x-1) + 1/(x-2)', '-1/(x-1) - 1/(x-2)'], ans: '-1/(x-1) + 1/(x-2)' },
+                            { q: 'What is (1/2)^(1/2)?', opts: ['1/√2', '1/2', '√2', '1/4'], ans: '1/√2' },
+                            { q: 'Simplify: (4/9)^(1/2)', opts: ['2/3', '4/9', '2/9', '4/3'], ans: '2/3' },
+                            { q: 'Express with common denominator: 1/(x-1) + 1/(x+1)', opts: ['2x/(x²-1)', '2/(x²-1)', '2x/(x²+1)', '1/(x²-1)'], ans: '2x/(x²-1)' },
+                            { q: 'What is (27)^(2/3)?', opts: ['9', '3', '27', '81'], ans: '9' },
+                            { q: 'Simplify: (a^(1/2))^4', opts: ['a²', 'a', 'a^4', 'a^8'], ans: 'a²' },
+                            { q: 'Partial: (5x+11)/(2x²+7x+3)', opts: ['2/(2x+1) + 3/(x+3)', '1/(2x+1) + 2/(x+3)', '3/(2x+1) + 1/(x+3)', '2/(2x+1) + 2/(x+3)'], ans: '2/(2x+1) + 3/(x+3)' },
+                            { q: 'What is 32^(2/5)?', opts: ['4', '8', '2', '16'], ans: '4' }
+                        ],
+                        'Decimals': [
+                            { q: 'Recurring decimal 0.12̇3̇ as fraction', opts: ['122/990', '123/1000', '1/9', '123/999'], ans: '122/990' },
+                            { q: 'Express 0.5̇ as fraction', opts: ['5/9', '1/2', '50/100', '5/10'], ans: '5/9' },
+                            { q: 'Significant figures: 0.004567 to 2 s.f.', opts: ['0.0046', '0.00456', '0.046', '0.4567'], ans: '0.0046' },
+                            { q: 'Standard form: 456 ÷ 0.01', opts: ['4.56×10⁴', '4.56×10³', '4.56×10²', '4.56×10⁵'], ans: '4.56×10⁴' },
+                            { q: 'Error bounds for 5.6 (1 d.p.)', opts: ['5.55 to 5.65', '5.5 to 5.7', '5.6 to 5.6', '5.5 to 6.0'], ans: '5.55 to 5.65' },
+                            { q: 'What is 3.14×10⁻² as decimal?', opts: ['0.0314', '314', '31.4', '0.314'], ans: '0.0314' },
+                            { q: 'Express 0.ȩ as fraction', opts: ['7/9', '7/10', '70/100', '7/99'], ans: '7/9' },
+                            { q: 'Percentage error: measured 95, actual 100', opts: ['5%', '5.26%', '-5%', '10%'], ans: '5%' },
+                            { q: 'To 3 s.f., 0.0009876', opts: ['0.000988', '9.88×10⁻⁴', '0.00099', '0.0009'], ans: '9.88×10⁻⁴' },
+                            { q: 'Bounds: 7.8±0.05', opts: ['7.75 to 7.85', '7.8 to 7.8', '7.75 to 7.90', '7.0 to 8.0'], ans: '7.75 to 7.85' }
+                        ],
+                        'Percentages': [
+                            { q: 'Exponential growth: £1000 at 8% for 3 years', opts: ['1259.71', '1240', '1300', '1080'], ans: '1259.71' },
+                            { q: 'Depreciation: car £20000 loses 15% annually, after 2 years', opts: ['14450', '17000', '13000', '16000'], ans: '14450' },
+                            { q: 'Compound interest formula uses?', opts: ['A = P(1+r)^n', 'A = P + Prn', 'A = Pr^n', 'A = P(1+rn)'], ans: 'A = P(1+r)^n' },
+                            { q: 'If amount doubles in 10 years, rate?', opts: ['7.18%', '10%', '5%', '20%'], ans: '7.18%' },
+                            { q: 'Inflation: price index 120 (base 100)', opts: ['20% increase', '120% increase', '100% increase', '80% increase'], ans: '20% increase' },
+                            { q: 'Reverse percentage: increased by 20% to get 120', opts: ['Original 100', 'Original 96', 'Original 144', 'Original 24'], ans: 'Original 100' },
+                            { q: 'Percentage change from 150 to 135', opts: ['-10%', '10%', '-15%', '15%'], ans: '-10%' },
+                            { q: 'Continuous compound: A = Pe^(rt), r=5%, t=2', opts: ['1.105P', '1.1P', '1.05P', '1.25P'], ans: '1.105P' },
+                            { q: 'If 3% = £450, then 100% = ?', opts: ['£15000', '£1350', '£450', '£13500'], ans: '£15000' },
+                            { q: 'Half-life formula: N = N₀(1/2)^(t/T)', opts: ['Correct', 'N = N₀×2^t', 'N = N₀×(1/2)', 'N = 2N₀×t'], ans: 'Correct' }
+                        ],
+                        'Algebra': [
+                            { q: 'Find limit: (x² - 1)/(x - 1) as x → 1', opts: ['2', '1', '0', 'undefined'], ans: '2' },
+                            { q: 'Sum to infinity of geometric series with a=5, r=0.5', opts: ['10', '5', '20', 'undefined'], ans: '10' },
+                            { q: 'Maclaurin expansion of e^x starts?', opts: ['1 + x + x²/2! + ...', 'x + x²/2 + ...', '1 - x + x²/2! - ...', 'x - x²/2! + ...'], ans: '1 + x + x²/2! + ...' },
+                            { q: 'Find sum of arithmetic series (first=1, last=100, n=100)', opts: ['5050', '5000', '10100', '100'], ans: '5050' },
+                            { q: 'Binomial expansion (1+x)^5 has how many terms?', opts: ['6', '5', '4', '7'], ans: '6' },
+                            { q: 'Coefficient of x² in (1-2x)⁴?', opts: ['24', '4', '6', '-24'], ans: '24' },
+                            { q: 'If arg(z) = π/3 and |z| = 2, then z = ?', opts: ['1 + i√3', '2 + 2i√3', '√3 + i', '1 + √3i'], ans: '1 + i√3' },
+                            { q: 'DeMoivre\'s theorem: (cos θ + i sin θ)^n = ?', opts: ['cos(nθ) + i sin(nθ)', 'cos θ + i sin(nθ)', 'n(cos θ + i sin θ)', 'cos(nθ) + sin(nθ)'], ans: 'cos(nθ) + i sin(nθ)' },
+                            { q: 'Solve: z⁴ = 1 in complex form', opts: ['±1, ±i', '1', '1, -1, i, -i', '1, i'], ans: '±1, ±i' },
+                            { q: 'What is i³?', opts: ['-i', 'i', '-1', '1'], ans: '-i' }
+                        ],
+                        'Geometry': [
+                            { q: 'Vector equation of line through (1,2) with direction (3,4)', opts: ['r = (1,2) + t(3,4)', 'r = (3,4) + t(1,2)', 'r = 3t + 4', 'x/3 = y/4'], ans: 'r = (1,2) + t(3,4)' },
+                            { q: 'Angle between vectors (1,0,0) and (1,1,0)', opts: ['45°', '90°', '30°', '60°'], ans: '45°' },
+                            { q: 'Cartesian: x + 2y = 5 has normal vector?', opts: ['(1,2)', '(2,1)', '(5,1)', '(1,5)'], ans: '(1,2)' },
+                            { q: 'Distance from (1,1) to line 3x + 4y = 12', opts: ['1.4', '5', '3', '2'], ans: '1.4' },
+                            { q: 'Equation of plane through (1,2,3) with normal (1,1,1)', opts: ['x + y + z = 6', 'x + y + z = 3', 'x + y + z = 1', 'x + y + z = 5'], ans: 'x + y + z = 6' },
+                            { q: 'Dot product (1,2,3)·(4,5,6)', opts: ['32', '24', '15', '120'], ans: '32' },
+                            { q: 'Cross product gives?', opts: ['Vector perpendicular', 'Scalar', 'Parallel vector', 'Magnitude'], ans: 'Vector perpendicular' },
+                            { q: 'Projection of u onto v = ?', opts: ['(u·v/|v|²)v', '(u·v)|v|', 'u·v', '|u||v|cos θ'], ans: '(u·v/|v|²)v' },
+                            { q: 'Volume of parallelepiped = |a·(b×c)| uses', opts: ['Scalar triple product', 'Dot product', 'Cross product', 'Vector sum'], ans: 'Scalar triple product' },
+                            { q: 'Distance between skew lines requires?', opts: ['Vector formula', 'Dot product', 'Angle', 'Magnitude'], ans: 'Vector formula' }
+                        ],
+                        'Ratio': [
+                            { q: 'Section formula: point dividing in ratio m:n', opts: ['((mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n))', '(m+n)/2', '(x₁+x₂)/2', 'x₁/m + x₂/n'], ans: '((mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n))' },
+                            { q: 'Midpoint = point dividing in ratio', opts: ['1:1', '1:2', '2:1', '1:3'], ans: '1:1' },
+                            { q: 'If dividing in ratio 2:3, fractions are?', opts: ['2/5 and 3/5', '2/3 and 3/5', '1/2 and 1/2', '2/3 and 1/3'], ans: '2/5 and 3/5' },
+                            { q: 'Scale factor k for enlargement multiplies area by?', opts: ['k²', 'k', 'k³', '2k'], ans: 'k²' },
+                            { q: 'For volume, scale factor k multiplies by?', opts: ['k³', 'k²', 'k', '3k'], ans: 'k³' },
+                            { q: 'Inverse ratio of 3:5 is?', opts: ['5:3', '3:5', '1:3', '1:5'], ans: '5:3' },
+                            { q: 'If a:b:c = 2:3:4 and a+b+c = 90', opts: ['a=20, b=30, c=40', 'a=30, b=30, c=30', 'a=20, b=20, c=50', 'a=40, b=30, c=20'], ans: 'a=20, b=30, c=40' },
+                            { q: 'Ratio of areas of similar shapes with side ratio 2:3', opts: ['4:9', '2:3', '8:27', '2:9'], ans: '4:9' },
+                            { q: 'For similar 3D shapes with linear ratio 1:2, volume ratio', opts: ['1:8', '1:4', '1:2', '2:8'], ans: '1:8' },
+                            { q: 'Harmonic mean of 2:3:4 values relates to?', opts: ['Ratio relationships', 'Arithmetic mean', 'Geometric mean', 'Standard deviation'], ans: 'Ratio relationships' }
+                        ],
+                        'Probability': [
+                            { q: 'Bayes\' theorem: P(A|B) = P(B|A)P(A)/?', opts: ['P(B)', 'P(A)P(B)', 'P(B|A)', '1'], ans: 'P(B)' },
+                            { q: 'If X ~ N(100, 15²), P(X > 115)?', opts: ['0.1587', '0.1', '0.5', '0.84'], ans: '0.1587' },
+                            { q: 'Central Limit Theorem states distribution of means is?', opts: ['Normal', 'Uniform', 'Exponential', 'Poisson'], ans: 'Normal' },
+                            { q: 'Poisson parameter λ = ?', opts: ['Mean = Variance', 'Mean > Variance', 'Mean < Variance', 'Mean + Variance'], ans: 'Mean = Variance' },
+                            { q: 'Chi-squared test degrees of freedom for 3×4 table', opts: ['6', '12', '11', '8'], ans: '6' },
+                            { q: 'Type I error is?', opts: ['Reject H₀ when true', 'Accept H₀ when false', 'p-value < 0.05', 'Correlation = 1'], ans: 'Reject H₀ when true' },
+                            { q: 'If X ~ B(n,p), variance = ?', opts: ['np(1-p)', 'np', 'nλ', 'σ²'], ans: 'np(1-p)' },
+                            { q: 'Correlation coefficient r = 1 means?', opts: ['Perfect positive', 'No correlation', 'Perfect negative', 'Linear only'], ans: 'Perfect positive' },
+                            { q: 'Spearman\'s rank correlation is for?', opts: ['Ordinal data', 'Normal data', 'Binary data', 'Categorical'], ans: 'Ordinal data' },
+                            { q: 'Bootstrap method used for?', opts: ['Sampling distributions', 'Hypothesis tests', 'Regression', 'ANOVA'], ans: 'Sampling distributions' }
+                        ],
+                        'Statistics': [
+                            { q: 'Unbiased estimate of population variance uses?', opts: ['n-1 denominator', 'n denominator', 'n+1 denominator', 'n/2 denominator'], ans: 'n-1 denominator' },
+                            { q: 'Confidence interval: x̄ ± z(σ/√n), for 95% z ≈', opts: ['1.96', '1.645', '2.576', '1.28'], ans: '1.96' },
+                            { q: 'Standard error = ?', opts: ['σ/√n', 'σ', 'σ/n', 'σ√n'], ans: 'σ/√n' },
+                            { q: 'Effect size: Cohen\'s d measures?', opts: ['Standardized difference', 'Variance', 'Sample size', 'P-value'], ans: 'Standardized difference' },
+                            { q: 'ANOVA tests equality of?', opts: ['Means across groups', 'Variances', 'Proportions', 'Medians'], ans: 'Means across groups' },
+                            { q: 'Regression line r² represents', opts: ['Proportion of variance explained', 'Correlation', 'Slope', 'Intercept'], ans: 'Proportion of variance explained' },
+                            { q: 'Residual = ?', opts: ['Observed - Predicted', 'Predicted - Observed', 'Observed - Mean', 'Sum of squares'], ans: 'Observed - Predicted' },
+                            { q: 'Q-Q plot checks for?', opts: ['Normality', 'Linearity', 'Homoscedasticity', 'Independence'], ans: 'Normality' },
+                            { q: 'Homoscedasticity means?', opts: ['Constant variance', 'Equal means', 'Normal distribution', 'Independence'], ans: 'Constant variance' },
+                            { q: 'Multicollinearity detected using?', opts: ['VIF', 'R²', 'AIC', 'BIC'], ans: 'VIF' }
+                        ],
+                        'Calculus': [
+                            { q: 'Find dy/dx for y = 3x² + 2x', opts: ['6x + 2', '6x + 1', '3x + 2', '9x + 2'], ans: '6x + 2' },
+                            { q: 'Integrate ∫2x dx', opts: ['x² + C', '2x² + C', 'x + C', '2x + C'], ans: 'x² + C' },
+                            { q: 'Solve: e^x = 7', opts: ['x = ln(7)', 'x = log(7)', 'x = 7', 'x = e⁷'], ans: 'x = ln(7)' },
+                            { q: 'What is log₂(8)?', opts: ['3', '4', '2', '1'], ans: '3' },
+                            { q: 'Find the limit of (x² - 1)/(x - 1) as x → 1', opts: ['2', '1', '0', 'undefined'], ans: '2' },
+                            { q: 'Solve: tan(x) = √3 for 0 ≤ x < 2π', opts: ['π/3, 4π/3', 'π/4, 5π/4', 'π/6, 7π/6', 'π/3, π/3'], ans: 'π/3, 4π/3' },
+                            { q: 'Find ∫₀¹ 3x² dx', opts: ['1', '3', '2', '0.5'], ans: '1' },
+                            { q: 'What is the derivative of sin(x)?', opts: ['cos(x)', '-cos(x)', 'sin(x)', '-sin(x)'], ans: 'cos(x)' },
+                            { q: 'Solve: log(x) + log(4) = log(20)', opts: ['x = 5', 'x = 16', 'x = 4', 'x = 10'], ans: 'x = 5' },
+                            { q: 'What is the second derivative of x³?', opts: ['6x', '3x²', 'x', '6x²'], ans: '6x' }
+                        ]
+                    };
+                    return topicQuestions[topic] || [];
+                }
+            } else {
+                // Science questions by year group and topic
+                const topicQuestions = {
+                    'Biology': [
+                        { q: 'What is the powerhouse of the cell?', opts: ['Mitochondria', 'Nucleus', 'Ribosome', 'Chloroplast'], ans: 'Mitochondria' },
+                        { q: 'What is the cell membrane made of?', opts: ['Phospholipid bilayer', 'Protein', 'Cellulose', 'Starch'], ans: 'Phospholipid bilayer' },
+                        { q: 'What do plant cells have that animal cells do not?', opts: ['Cell wall and chloroplasts', 'Nucleus', 'Mitochondria', 'Ribosomes'], ans: 'Cell wall and chloroplasts' },
+                        { q: 'What is the function of ribosomes?', opts: ['Protein synthesis', 'Energy production', 'Storage', 'Transport'], ans: 'Protein synthesis' },
+                        { q: 'What is photosynthesis?', opts: ['Process to convert light into chemical energy', 'Breakdown of glucose', 'Cell division', 'Protein making'], ans: 'Process to convert light into chemical energy' },
+                        { q: 'What is respiration?', opts: ['Process to release energy from food', 'Breathing', 'Photosynthesis', 'Digestion'], ans: 'Process to release energy from food' },
+                        { q: 'How many chambers does a heart have?', opts: ['4', '2', '3', '6'], ans: '4' },
+                        { q: 'What carries oxygen in blood?', opts: ['Hemoglobin in red blood cells', 'White blood cells', 'Platelets', 'Plasma'], ans: 'Hemoglobin in red blood cells' },
+                        { q: 'What is the basic unit of life?', opts: ['Cell', 'Tissue', 'Organ', 'Molecule'], ans: 'Cell' },
+                        { q: 'What controls all cell activities?', opts: ['Nucleus', 'Mitochondria', 'Ribosome', 'Cell membrane'], ans: 'Nucleus' }
+                    ],
+                    'Chemistry': [
+                        { q: 'What is H2O?', opts: ['Water', 'Oxygen', 'Hydrogen', 'Salt'], ans: 'Water' },
+                        { q: 'What is the chemical formula for salt?', opts: ['NaCl', 'Na₂Cl', 'NaCl₂', 'Na₃Cl'], ans: 'NaCl' },
+                        { q: 'What is the boiling point of water?', opts: ['100°C', '0°C', '50°C', '200°C'], ans: '100°C' },
+                        { q: 'What is the freezing point of water?', opts: ['0°C', '100°C', '-100°C', '50°C'], ans: '0°C' },
+                        { q: 'What element has symbol O?', opts: ['Oxygen', 'Osmium', 'Ozone', 'Oganesson'], ans: 'Oxygen' },
+                        { q: 'What element has symbol C?', opts: ['Carbon', 'Calcium', 'Cadmium', 'Cobalt'], ans: 'Carbon' },
+                        { q: 'What are the three states of matter?', opts: ['Solid, Liquid, Gas', 'Solid, Water, Air', 'Hard, Soft, Medium', 'Hot, Cold, Warm'], ans: 'Solid, Liquid, Gas' },
+                        { q: 'What is pH 7?', opts: ['Neutral', 'Acidic', 'Basic', 'Unknown'], ans: 'Neutral' },
+                        { q: 'What is an ion?', opts: ['Charged atom or molecule', 'Neutral atom', 'Electron', 'Proton'], ans: 'Charged atom or molecule' },
+                        { q: 'What is a compound?', opts: ['Two or more elements bonded', 'Single element', 'Mixture', 'Solution'], ans: 'Two or more elements bonded' }
+                    ],
+                    'Physics': [
+                        { q: 'What is Newton\'s First Law?', opts: ['Object at rest stays at rest', 'F = ma', 'Action = Reaction', 'Energy conserved'], ans: 'Object at rest stays at rest' },
+                        { q: 'What is Newton\'s Second Law?', opts: ['F = ma', 'Action = Reaction', 'Energy conserved', 'Inertia property'], ans: 'F = ma' },
+                        { q: 'What is the SI unit of force?', opts: ['Newton (N)', 'Joule', 'Watt', 'Pascal'], ans: 'Newton (N)' },
+                        { q: 'What is the speed of light?', opts: ['3×10⁸ m/s', '3×10⁶ m/s', '3×10¹⁰ m/s', '3×10⁴ m/s'], ans: '3×10⁸ m/s' },
+                        { q: 'What is the acceleration due to gravity?', opts: ['9.8 m/s²', '10 m/s²', '1 m/s²', '100 m/s²'], ans: '9.8 m/s²' },
+                        { q: 'What is kinetic energy?', opts: ['Energy of motion (½mv²)', 'Stored energy', 'Heat energy', 'Light energy'], ans: 'Energy of motion (½mv²)' },
+                        { q: 'What is potential energy?', opts: ['Stored energy (mgh)', 'Energy of motion', 'Heat energy', 'Sound energy'], ans: 'Stored energy (mgh)' },
+                        { q: 'What is density?', opts: ['Mass per unit volume', 'Weight per volume', 'Size measure', 'Thickness'], ans: 'Mass per unit volume' },
+                        { q: 'What is pressure?', opts: ['Force per unit area', 'Force times area', 'Area per force', 'Speed measure'], ans: 'Force per unit area' },
+                        { q: 'What is the law of conservation of energy?', opts: ['Energy cannot be created or destroyed', 'Energy always increases', 'Energy decreases', 'Energy is constant'], ans: 'Energy cannot be created or destroyed' }
+                    ],
+                    'Cells': [
+                        { q: 'What is a prokaryote?', opts: ['Cell without nucleus', 'Cell with nucleus', 'Large cell', 'Plant cell'], ans: 'Cell without nucleus' },
+                        { q: 'What is a eukaryote?', opts: ['Cell with nucleus', 'Cell without nucleus', 'Small cell', 'Bacteria'], ans: 'Cell with nucleus' },
+                        { q: 'What is the cell cycle?', opts: ['Growth, replication, and division', 'Eating cycle', 'Breathing cycle', 'Sleeping cycle'], ans: 'Growth, replication, and division' },
+                        { q: 'What is mitosis?', opts: ['Process of cell division', 'Cell death', 'Cell growth', 'DNA replication'], ans: 'Process of cell division' },
+                        { q: 'How many chromosomes in human cells?', opts: ['46', '23', '92', '100'], ans: '46' },
+                        { q: 'What is DNA?', opts: ['Deoxyribonucleic acid', 'Diribose nucleic acid', 'DNA protein', 'Double negative acid'], ans: 'Deoxyribonucleic acid' },
+                        { q: 'What are genes?', opts: ['Segments of DNA', 'Proteins', 'Cells', 'Organs'], ans: 'Segments of DNA' },
+                        { q: 'What is a mutation?', opts: ['Change in DNA sequence', 'Cell death', 'DNA replication', 'Protein making'], ans: 'Change in DNA sequence' },
+                        { q: 'What do vesicles do?', opts: ['Transport materials in cells', 'Store energy', 'Make proteins', 'Copy DNA'], ans: 'Transport materials in cells' },
+                        { q: 'What is the Golgi apparatus?', opts: ['Modifies and packages proteins', 'Makes proteins', 'Stores water', 'Makes energy'], ans: 'Modifies and packages proteins' }
+                    ],
+                    'Forces': [
+                        { q: 'What is friction?', opts: ['Force opposing motion', 'Pushing force', 'Gravity', 'Magnetic force'], ans: 'Force opposing motion' },
+                        { q: 'What is tension?', opts: ['Pulling force in ropes/cables', 'Pushing force', 'Gravity', 'Elastic force'], ans: 'Pulling force in ropes/cables' },
+                        { q: 'What is the normal force?', opts: ['Force perpendicular to surface', 'Gravity', 'Friction', 'Applied force'], ans: 'Force perpendicular to surface' },
+                        { q: 'What is weight?', opts: ['Force due to gravity (mg)', 'Mass', 'Volume', 'Density'], ans: 'Force due to gravity (mg)' },
+                        { q: 'What is net force?', opts: ['Sum of all forces', 'One force', 'Average force', 'Maximum force'], ans: 'Sum of all forces' },
+                        { q: 'What is equilibrium?', opts: ['Net force is zero', 'No forces', 'All forces equal', 'Moving steadily'], ans: 'Net force is zero' },
+                        { q: 'What is momentum?', opts: ['Mass times velocity', 'Mass times acceleration', 'Force times time', 'Energy measure'], ans: 'Mass times velocity' },
+                        { q: 'What is Newton\'s Third Law?', opts: ['Action and reaction are equal', 'F = ma', 'Forces balance', 'Motion continues'], ans: 'Action and reaction are equal' },
+                        { q: 'What is centripetal force?', opts: ['Force toward center of circular motion', 'Outward force', 'Friction', 'Gravity'], ans: 'Force toward center of circular motion' },
+                        { q: 'What is work?', opts: ['Force times distance (F×d)', 'Power', 'Energy', 'Time'], ans: 'Force times distance (F×d)' }
+                    ],
+                    'Energy': [
+                        { q: 'What is energy?', opts: ['Capacity to do work', 'Force', 'Power', 'Motion'], ans: 'Capacity to do work' },
+                        { q: 'What is thermal energy?', opts: ['Energy from heat', 'Light energy', 'Sound energy', 'Electrical energy'], ans: 'Energy from heat' },
+                        { q: 'What is renewable energy?', opts: ['Energy from replenishable sources', 'Coal energy', 'Oil energy', 'Nuclear energy'], ans: 'Energy from replenishable sources' },
+                        { q: 'What is fossil fuel?', opts: ['Organic material from ancient organisms', 'Plant material', 'Rock material', 'Mineral material'], ans: 'Organic material from ancient organisms' },
+                        { q: 'What is a watt?', opts: ['Unit of power (energy per second)', 'Unit of energy', 'Unit of force', 'Unit of time'], ans: 'Unit of power (energy per second)' },
+                        { q: 'What is efficiency?', opts: ['Useful energy output / total energy input', 'Total output', 'Input only', 'Waste energy'], ans: 'Useful energy output / total energy input' },
+                        { q: 'What are examples of renewable energy?', opts: ['Solar, wind, hydroelectric', 'Coal, oil, gas', 'Nuclear, coal', 'Oil, wind'], ans: 'Solar, wind, hydroelectric' },
+                        { q: 'What is nuclear energy?', opts: ['Energy from atomic reactions', 'Heat energy', 'Light energy', 'Sound energy'], ans: 'Energy from atomic reactions' },
+                        { q: 'What is geothermal energy?', opts: ['Heat energy from Earth', 'Sun energy', 'Wind energy', 'Water energy'], ans: 'Heat energy from Earth' },
+                        { q: 'What is chemical energy?', opts: ['Energy stored in chemical bonds', 'Light energy', 'Heat energy', 'Sound energy'], ans: 'Energy stored in chemical bonds' }
+                    ],
+                    'Electricity': [
+                        { q: 'What is Ohm\'s Law?', opts: ['V = IR', 'F = ma', 'E = mc²', 'P = VI'], ans: 'V = IR' },
+                        { q: 'What is a conductor?', opts: ['Material allowing electricity to flow', 'Material blocking electricity', 'Energy source', 'Circuit device'], ans: 'Material allowing electricity to flow' },
+                        { q: 'What is an insulator?', opts: ['Material preventing electricity flow', 'Material allowing flow', 'Energy source', 'Circuit device'], ans: 'Material preventing electricity flow' },
+                        { q: 'What is current?', opts: ['Flow of electric charge', 'Voltage', 'Resistance', 'Power'], ans: 'Flow of electric charge' },
+                        { q: 'What is voltage?', opts: ['Electric potential difference', 'Current', 'Resistance', 'Power'], ans: 'Electric potential difference' },
+                        { q: 'What is resistance?', opts: ['Opposition to current flow', 'Voltage', 'Power', 'Current'], ans: 'Opposition to current flow' },
+                        { q: 'What is power?', opts: ['P = VI', 'V/I', 'I/V', 'V + I'], ans: 'P = VI' },
+                        { q: 'What is a circuit?', opts: ['Complete path for current', 'Broken path', 'Single wire', 'No path'], ans: 'Complete path for current' },
+                        { q: 'What is AC current?', opts: ['Alternating current', 'Direct current', 'Constant current', 'No current'], ans: 'Alternating current' },
+                        { q: 'What is DC current?', opts: ['Direct current', 'Alternating current', 'Variable current', 'No current'], ans: 'Direct current' }
+                    ],
+                    'Organic Chemistry': [
+                        { q: 'What is the formula for methane?', opts: ['CH₄', 'C₂H₆', 'C₂H₄', 'CH₂'], ans: 'CH₄' },
+                        { q: 'What is the formula for ethane?', opts: ['C₂H₆', 'CH₄', 'C₂H₄', 'C₃H₈'], ans: 'C₂H₆' },
+                        { q: 'What is the formula for ethene?', opts: ['C₂H₄', 'CH₄', 'C₂H₆', 'C₃H₆'], ans: 'C₂H₄' },
+                        { q: 'What is a hydrocarbon?', opts: ['Compound of carbon and hydrogen', 'Compound with water', 'Compound with oxygen', 'Compound with nitrogen'], ans: 'Compound of carbon and hydrogen' },
+                        { q: 'What is combustion?', opts: ['Reaction with oxygen producing heat', 'Reaction with water', 'Reaction with acid', 'Reaction with base'], ans: 'Reaction with oxygen producing heat' },
+                        { q: 'What is an alkane?', opts: ['Hydrocarbon with only single bonds', 'Hydrocarbon with double bonds', 'Hydrocarbon with triple bonds', 'Hydrocarbon with rings'], ans: 'Hydrocarbon with only single bonds' },
+                        { q: 'What is an alkene?', opts: ['Hydrocarbon with double bonds', 'Hydrocarbon with single bonds', 'Hydrocarbon with triple bonds', 'Hydrocarbon with rings'], ans: 'Hydrocarbon with double bonds' },
+                        { q: 'What is a polymer?', opts: ['Long chain of repeating units', 'Single molecule', 'Short chain', 'Circular molecule'], ans: 'Long chain of repeating units' },
+                        { q: 'What is fermentation?', opts: ['Process producing ethanol from glucose', 'Production of acid', 'Production of base', 'Production of salt'], ans: 'Process producing ethanol from glucose' },
+                        { q: 'What is oxidation?', opts: ['Loss of electrons or gain of oxygen', 'Gain of electrons', 'Loss of hydrogen', 'Production of water'], ans: 'Loss of electrons or gain of oxygen' }
+                    ],
+                    'Genetics': [
+                        { q: 'What is a gene?', opts: ['Unit of heredity', 'Chromosome', 'DNA strand', 'Protein'], ans: 'Unit of heredity' },
+                        { q: 'What is a dominant allele?', opts: ['Allele expressed when present', 'Hidden allele', 'Allele not expressed', 'Mutant allele'], ans: 'Allele expressed when present' },
+                        { q: 'What is a recessive allele?', opts: ['Allele only expressed when homozygous', 'Allele always expressed', 'Dominant allele', 'Mutant allele'], ans: 'Allele only expressed when homozygous' },
+                        { q: 'What is a Punnett square?', opts: ['Tool for predicting genetic outcomes', 'DNA model', 'Cell diagram', 'Evolution chart'], ans: 'Tool for predicting genetic outcomes' },
+                        { q: 'What is heterozygous?', opts: ['Two different alleles', 'Two same alleles', 'No alleles', 'One allele'], ans: 'Two different alleles' },
+                        { q: 'What is homozygous?', opts: ['Two identical alleles', 'Two different alleles', 'No alleles', 'One allele'], ans: 'Two identical alleles' },
+                        { q: 'What is meiosis?', opts: ['Process producing sex cells', 'Cell division for growth', 'DNA replication', 'Protein synthesis'], ans: 'Process producing sex cells' },
+                        { q: 'What is mitosis?', opts: ['Process producing identical cells', 'Sex cell production', 'DNA mutation', 'Protein making'], ans: 'Process producing identical cells' },
+                        { q: 'What is inheritance?', opts: ['Passing traits to offspring', 'Acquiring traits', 'Losing traits', 'Changing traits'], ans: 'Passing traits to offspring' },
+                        { q: 'What is genetic variation?', opts: ['Differences in genes within population', 'Same genes', 'No differences', 'Evolution'], ans: 'Differences in genes within population' }
+                    ],
+                    'Space': [
+                        { q: 'What is our Sun?', opts: ['Star at center of solar system', 'Planet', 'Moon', 'Asteroid'], ans: 'Star at center of solar system' },
+                        { q: 'How many planets are in our solar system?', opts: ['8', '9', '7', '10'], ans: '8' },
+                        { q: 'What is an astronomical unit (AU)?', opts: ['Distance from Earth to Sun', 'Light year', 'Parsec', 'Kilometer'], ans: 'Distance from Earth to Sun' },
+                        { q: 'What is a light year?', opts: ['Distance light travels in a year', 'Time measurement', 'Distance to Sun', 'Age of Universe'], ans: 'Distance light travels in a year' },
+                        { q: 'What is a black hole?', opts: ['Region with extreme gravity', 'Empty space', 'Type of star', 'Dark planet'], ans: 'Region with extreme gravity' },
+                        { q: 'What is a supernova?', opts: ['Explosive death of a star', 'Birth of star', 'Type of galaxy', 'Meteor shower'], ans: 'Explosive death of a star' },
+                        { q: 'What is a galaxy?', opts: ['Collection of billions of stars', 'Single star', 'Star system', 'Planetary system'], ans: 'Collection of billions of stars' },
+                        { q: 'What is the Big Bang?', opts: ['Origin of the universe', 'Explosion sound', 'Star collision', 'Universe end'], ans: 'Origin of the universe' },
+                        { q: 'What is a meteor?', opts: ['Space rock entering Earth\'s atmosphere', 'Rock in space', 'Moon', 'Planet'], ans: 'Space rock entering Earth\'s atmosphere' },
+                        { q: 'What is a comet?', opts: ['Icy object in space', 'Rocky object', 'Star', 'Planet'], ans: 'Icy object in space' }
+                    ]
+                };
+                return topicQuestions[topic] || [];
+            }
+        }
+
+        // Return a shuffled subset of questions so papers differ each time
+        function getQuestions(year, subject, topic) {
+            const qs = getQuestionsRaw(year, subject, topic) || [];
+            // Fisher-Yates shuffle
+            for (let i = qs.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [qs[i], qs[j]] = [qs[j], qs[i]];
+            }
+            return qs.slice(0, 10);
+        }
+
+        // UI Functions
+        function setYear(year) {
+            currentYear = year;
+            document.querySelectorAll('.year-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            render();
+        }
+
+        function setSubject(subject) {
+            currentSubject = subject;
+            currentTopic = subject === 'Maths' ? 'Number' : 'Biology';
+            document.querySelectorAll('.tab-trigger').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            render();
+        }
+
+        function setTopic(topic) {
+            currentTopic = topic;
+            document.querySelectorAll('.topic-card').forEach(card => card.classList.remove('active'));
+            event.target.parentElement.classList.add('active');
+            currentFlashcardIndex = 0;
+            showingAnswer = false;
+            render();
+        }
+
+        function nextFlashcard() {
+            const cards = flashcardData[currentSubject] && flashcardData[currentSubject][currentTopic] ? flashcardData[currentSubject][currentTopic] : [];
+            if (cards.length === 0) return;
+            currentFlashcardIndex = (currentFlashcardIndex + 1) % cards.length;
+            showingAnswer = false;
+            renderFlashcard();
+        }
+
+        function toggleAnswer() {
+            showingAnswer = !showingAnswer;
+            renderFlashcard();
+        }
+
+        function renderFlashcard() {
+            const cards = flashcardData[currentSubject][currentTopic] || [];
+            if (cards.length === 0) return;
+            const card = cards[currentFlashcardIndex % cards.length];
+            document.getElementById('flashcardQuestion').textContent = card.question;
+            document.getElementById('flashcardAnswer').textContent = card.answer;
+            document.getElementById('flashcardAnswer').style.display = showingAnswer ? 'block' : 'none';
+            document.getElementById('answerToggle').textContent = showingAnswer ? 'Hide Answer' : 'Reveal Answer';
+            document.getElementById('flashcardTitle').textContent = `${currentTopic} Flashcards`;
+            document.getElementById('flashcardBadge').textContent = `${cards.length} Cards`;
+        }
+
+        function selectOption(paperId, questionIdx, option, correct) {
+            answers[`${paperId}-${questionIdx}`] = option;
+            
+            const buttons = document.querySelectorAll(`[data-paper="${paperId}"][data-question="${questionIdx}"]`);
+            buttons.forEach(btn => {
+                btn.classList.remove('selected', 'correct', 'incorrect');
+                if (btn.textContent === option) {
+                    btn.classList.add(correct ? 'correct' : 'incorrect');
+                }
+            });
+        }
+
+        function submitPaper(paperId, questionCount) {
+            let correct = 0;
+            const questions = (window.currentPaperQuestions && window.currentPaperQuestions[paperId]) || getQuestions(currentYear, currentSubject, currentTopic);
+
+            questions.forEach((q, idx) => {
+                if (answers[`${paperId}-${idx}`] === q.ans) correct++;
+            });
+
+            const result = { correct, total: questionCount };
+            const pointsEarned = calculateStudyPoints(correct, questionCount);
+            scores[paperId] = result;
+
+            let firstTimeSubmission = false;
+            if (currentUser) {
+                currentUser.scores = currentUser.scores || {};
+                currentUser.scores[paperId] = result;
+
+                currentUser.pastPapers = currentUser.pastPapers || [];
+                const existingIndex = currentUser.pastPapers.findIndex(p => p.paperId === paperId);
+
+                if (existingIndex === -1) {
+                    // First time doing this paper: award points and save
+                    firstTimeSubmission = true;
+                    currentUser.pastPapers.push({ paperId, timestamp: Date.now(), questions, correct, total: questionCount, pointsAwarded: pointsEarned });
+                    currentUser.studyPoints = (currentUser.studyPoints || 0) + pointsEarned;
+                } else {
+                    // Retake: update saved paper but do not award additional study points
+                    currentUser.pastPapers[existingIndex].questions = questions;
+                    currentUser.pastPapers[existingIndex].correct = correct;
+                    currentUser.pastPapers[existingIndex].total = questionCount;
+                }
+
+                const users = getStoredUsers();
+                const userIndex = users.findIndex(u => u.name.toLowerCase() === currentUser.name.toLowerCase());
+                if (userIndex >= 0) {
+                    users[userIndex] = currentUser;
+                    saveStoredUsers(users);
+                }
+
+                updateUserHeader();
+            }
+
+            const scoreEl = document.getElementById(`score-${paperId}`);
+            if (scoreEl) {
+                const displayPts = currentUser ? (firstTimeSubmission ? ` | +${pointsEarned} Points` : ' (Retake: no points awarded)') : ` | +${pointsEarned} Points`;
+                scoreEl.innerHTML = `<div class="score-display">Score: ${correct} / ${questionCount}${displayPts}</div>`;
+            }
+            renderLeaderboard();
+        }
+
+        function calculateStudyPoints(correct, total) {
+            const percentage = (correct / total) * 100;
+            if (percentage >= 90) return 50;
+            if (percentage >= 80) return 40;
+            if (percentage >= 70) return 30;
+            if (percentage >= 60) return 20;
+            if (percentage >= 50) return 10;
+            return 0;
+        }
+
+        function getTopLeaderboard() {
+            const users = getStoredUsers();
+            return users
+                .map(u => ({ name: u.name, studyPoints: u.studyPoints || 0 }))
+                .sort((a, b) => b.studyPoints - a.studyPoints)
+                .slice(0, 10);
+        }
+
+        function renderLeaderboard() {
+            const topUsers = getTopLeaderboard();
+            const medals = ['🥇', '🥈', '🥉'];
+            let html = '<div class="leaderboard-header"><div>Rank</div><div>Name</div><div>Study Points</div></div>';
+            
+            topUsers.forEach((user, idx) => {
+                const medal = idx < 3 ? medals[idx] : `${idx + 1}`;
+                const medalClass = idx < 3 ? 'gold' : '';
+                html += `
+                    <div class="leaderboard-row">
+                        <div class="leaderboard-rank ${medalClass}">${medal}</div>
+                        <div class="leaderboard-name">${user.name}</div>
+                        <div class="leaderboard-points">${user.studyPoints} pts</div>
+                    </div>
+                `;
+            });
+            document.getElementById('leaderboardContainer').innerHTML = html;
+        }
+
+        // Past Papers UI
+        function showPastPapers() {
+            if (!currentUser) {
+                switchAuthTab('login');
+                return;
+            }
+            document.getElementById('pastPapersModal').style.display = 'flex';
+            renderPastPapers();
+        }
+
+        function hidePastPapers() {
+            document.getElementById('pastPapersModal').style.display = 'none';
+        }
+
+        function renderPastPapers() {
+            const list = document.getElementById('pastPapersList');
+            if (!list) return;
+            const past = currentUser?.pastPapers || [];
+            if (past.length === 0) {
+                list.innerHTML = '<p>No saved papers yet.</p>';
+                return;
+            }
+            let html = '';
+            past.forEach((p, idx) => {
+                html += `
+                    <div style="margin-bottom:1rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div><strong>${p.paperId}</strong> <small style="color:var(--text-secondary);">${new Date(p.timestamp).toLocaleString()}</small></div>
+                            <div>Score: ${p.correct} / ${p.total}</div>
+                        </div>
+                        <div style="margin-top:0.5rem;">
+                            <button class="btn" onclick="viewSavedPaper(${idx})">View</button>
+                            <button class="btn" onclick="retakeSavedPaper('${p.paperId}', ${idx})">Retake</button>
+                        </div>
+                    </div>
+                    <hr style="border-color:rgba(255,255,255,0.06);"/>
+                `;
+            });
+            list.innerHTML = html;
+        }
+
+        function viewSavedPaper(index) {
+            const list = document.getElementById('pastPapersList');
+            const p = currentUser?.pastPapers?.[index];
+            if (!p) return;
+            let html = `<div style="margin-bottom:1rem;"><button class="btn" onclick="renderPastPapers()">Back</button></div>`;
+            html += `<h3>${p.paperId} • ${new Date(p.timestamp).toLocaleString()}</h3>`;
+            html += `<div style="margin-bottom:0.5rem;">Score: ${p.correct} / ${p.total}</div>`;
+            html += `<div>`;
+            p.questions.forEach((q, i) => {
+                html += `<div style="margin-bottom:0.75rem;"><div><strong>${i+1}. ${q.q}</strong></div><div style="color:var(--text-secondary);">Answer: ${q.ans}</div></div>`;
+            });
+            html += `</div>`;
+            list.innerHTML = html;
+        }
+
+        function retakeSavedPaper(paperId, index) {
+            const p = currentUser?.pastPapers?.[index];
+            if (!p) return;
+            // preload the exact question set for that paper so renderPapers uses it
+            window.currentPaperQuestions = window.currentPaperQuestions || {};
+            window.currentPaperQuestions[paperId] = p.questions.map(q => ({ q: q.q, opts: q.opts, ans: q.ans }));
+            hidePastPapers();
+            // re-render papers and scroll to the target paper
+            renderPapers();
+            // scroll to the paper card
+            setTimeout(() => {
+                const el = document.querySelector(`.paper-card:nth-of-type(${parseInt(paperId.replace('paper',''))})`);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 200);
+        }
+
+        function renderTopics() {
+            const topics = currentSubject === 'Maths' ? mathsTopics : scienceTopics;
+            const html = topics.map(topic => `
+                <div class="topic-card ${currentTopic === topic ? 'active' : ''}">
+                    <div onclick="setTopic('${topic}')" style="cursor: pointer;">
+                        <h3>${topic}</h3>
+                        <div class="topic-badge">Official Curriculum</div>
+                        <p>Includes revision, flashcards, quizzes and exam papers.</p>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('topicsContainer').innerHTML = html;
+        }
+
+        const usersStorageKey = 'benyasStudyUsers';
+        const sessionStorageKey = 'benyasStudySession';
+        let currentUser = null;
+
+        function getStoredUsers() {
+            try {
+                return JSON.parse(localStorage.getItem(usersStorageKey)) || [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function saveStoredUsers(users) {
+            localStorage.setItem(usersStorageKey, JSON.stringify(users));
+        }
+
+        function getSavedSession() {
+            try {
+                return JSON.parse(localStorage.getItem(sessionStorageKey));
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function saveSession(user) {
+            localStorage.setItem(sessionStorageKey, JSON.stringify({ username: user.name }));
+        }
+
+        function clearSession() {
+            localStorage.removeItem(sessionStorageKey);
+        }
+
+        function findUserByName(name) {
+            return getStoredUsers().find(u => u.name.toLowerCase() === name.toLowerCase());
+        }
+
+        function updateUserHeader() {
+            if (!currentUser) return;
+            document.getElementById('userAvatar').textContent = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'B';
+            document.getElementById('userName').textContent = `${currentUser.name} • ${currentUser.studyPoints || 0} Points`;
+            document.getElementById('userHeader').style.display = 'flex';
+        }
+
+        function showAuthError(elementId, message) {
+            const el = document.getElementById(elementId);
+            if (el) el.textContent = message;
+        }
+
+        function clearAuthErrors() {
+            ['loginError', 'registerError'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = '';
+            });
+        }
+
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(btn => {
+                if (btn.getAttribute('data-tab') === tab) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+            if (tab === 'login') {
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.getElementById('registerForm').classList.add('active');
+            }
+            clearAuthErrors();
+        }
+
+        function showMainContent() {
+            const authModal = document.getElementById('authModal');
+            const mainContent = document.getElementById('mainContent');
+            if (authModal) authModal.style.display = 'none';
+            if (mainContent) mainContent.style.display = 'block';
+            window.scrollTo(0, 0);
+            updateUserHeader();
+            render();
+        }
+
+        function logout() {
+            currentUser = null;
+            clearSession();
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('authModal').style.display = 'flex';
+            switchAuthTab('login');
+        }
+
+        function handleRegister() {
+            clearAuthErrors();
+            const name = document.getElementById('registerName').value.trim();
+            const password = document.getElementById('registerPassword').value;
+
+            if (!name) return showAuthError('registerError', 'Enter a username.');
+            if (!password || password.length < 6) return showAuthError('registerError', 'Password must be at least 6 characters.');
+            if (findUserByName(name)) return showAuthError('registerError', 'This username is already taken.');
+
+            const users = getStoredUsers();
+            const newUser = {
+                name,
+                password,
+                scores: {},
+                studyPoints: 0
+            };
+            users.push(newUser);
+            saveStoredUsers(users);
+            currentUser = newUser;
+            saveSession(newUser);
+            showMainContent();
+        }
+
+        function handleLogin() {
+            clearAuthErrors();
+            const name = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            if (!name) return showAuthError('loginError', 'Enter your username.');
+            if (!password) return showAuthError('loginError', 'Enter your password.');
+
+            const users = getStoredUsers();
+            const user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
+            if (!user || user.password !== password) {
+                return showAuthError('loginError', 'Username or password is incorrect.');
+            }
+
+            currentUser = user;
+            saveSession(user);
+            showMainContent();
+        }
+
+        function restoreSession() {
+            const session = getSavedSession();
+            if (!session || !session.username) return;
+            const user = findUserByName(session.username);
+            if (!user) return;
+            currentUser = user;
+            showMainContent();
+        }
+
+        function renderGrades() {
+            const grades = [
+                ['9 / A*', 90],
+                ['8 / A', 80],
+                ['7', 70],
+                ['6', 60],
+                ['5', 50],
+                ['4', 40]
+            ];
+            const html = grades.map(([grade, pct]) => `
+                <div class="grade-row">
+                    <div class="grade-label">${grade}</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${pct}%"></div>
+                    </div>
+                    <div class="grade-label-pct">${pct}%</div>
+                </div>
+            `).join('');
+            document.getElementById('gradesContainer').innerHTML = html;
+        }
+
+        function renderPapers() {
+            let html = '';
+
+            const userScores = currentUser?.scores || {};
+            window.currentPaperQuestions = window.currentPaperQuestions || {};
+            for (let p = 1; p <= 5; p++) {
+                // Prefer an existing preloaded paper (e.g., when retaking a saved paper), otherwise generate new shuffled questions
+                const questions = (window.currentPaperQuestions && window.currentPaperQuestions[`paper${p}`]) || getQuestions(currentYear, currentSubject, currentTopic);
+                if (!window.currentPaperQuestions) window.currentPaperQuestions = {};
+                if (!window.currentPaperQuestions[`paper${p}`]) window.currentPaperQuestions[`paper${p}`] = questions;
+
+                const storedScore = userScores[`paper${p}`];
+                const savedScoreHtml = storedScore ? `<div class="score-display">Saved: ${storedScore.correct} / ${storedScore.total}</div>` : '';
+                html += `
+                    <div class="paper-card">
+                        <div class="paper-header">
+                            <h3>${currentSubject} - ${currentTopic} - Paper ${p}</h3>
+                            <div class="paper-meta">${currentYear} • 10 Questions • ${currentTopic} Focus</div>
+                        </div>
+                        <div class="paper-content">
+                            <div>
+                                ${questions.map((q, idx) => `
+                                    <div class="question-item">
+                                        <div class="question-number">${idx + 1}. ${q.q}</div>
+                                        <div class="options-grid">
+                                            ${q.opts.map(opt => `
+                                                <button 
+                                                    class="option-btn" 
+                                                    data-paper="paper${p}" 
+                                                    data-question="${idx}"
+                                                    onclick="selectOption('paper${p}', ${idx}, '${opt}', ${opt === q.ans})"
+                                                >${opt}</button>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="paper-actions">
+                                <button class="btn btn-primary" onclick="submitPaper('paper${p}', ${questions.length})">Submit Paper</button>
+                                <div id="score-paper${p}">${savedScoreHtml}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('papersContainer').innerHTML = html;
+        }
+
+        function render() {
+            renderTopics();
+            renderFlashcard();
+            renderGrades();
+            renderPapers();
+            renderLeaderboard();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            switchAuthTab('login');
+            restoreSession();
+            renderFlashcard();
+            
+            // Set first year and topic as active
+            const firstYearBtn = document.querySelector('.year-btn');
+            if (firstYearBtn) firstYearBtn.classList.add('active');
+            currentTopic = 'Number';
+            const firstTopicCard = document.querySelector('.topic-card');
+            if (firstTopicCard) firstTopicCard.classList.add('active');
+        });
+    </script>
+</body>
+</html>
